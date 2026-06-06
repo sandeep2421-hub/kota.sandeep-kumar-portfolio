@@ -20,6 +20,7 @@ import { PORTFOLIO_PROJECTS } from "./data";
 import { Project } from "./types";
 import HeroLoader from "./components/HeroLoader";
 import ProjectDetail from "./components/ProjectDetail";
+import ProjectNarrative from "./components/ProjectNarrative";
 
 function getYouTubeId(url: string): string | null {
   if (!url) return null;
@@ -50,7 +51,7 @@ function getYouTubeId(url: string): string | null {
 
 export default function App() {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [view, setView] = useState<'main' | 'detail'>('main');
+  const [view, setView] = useState<'main' | 'detail' | 'narrative'>('main');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [overclock, setOverclock] = useState(false);
   const [theaterMode, setTheaterMode] = useState(false);
@@ -1014,6 +1015,16 @@ export default function App() {
             onBack={() => setView('main')} 
             onNext={handleNext}
             onPrev={handlePrev}
+            onReadMore={() => setView('narrative')}
+          />
+        )}
+
+        {view === 'narrative' && (
+          <ProjectNarrative 
+            key="narrative-view"
+            project={PORTFOLIO_PROJECTS[currentIndex]} 
+            activeColor={activeColor} 
+            onBack={() => setView('detail')} 
           />
         )}
       </AnimatePresence>

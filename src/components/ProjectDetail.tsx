@@ -8,9 +8,10 @@ interface ProjectDetailProps {
   onNext: () => void;
   onPrev: () => void;
   activeColor: string;
+  onReadMore: () => void;
 }
 
-export default function ProjectDetail({ project, onBack, onNext, onPrev, activeColor }: ProjectDetailProps) {
+export default function ProjectDetail({ project, onBack, onNext, onPrev, activeColor, onReadMore }: ProjectDetailProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -99,7 +100,8 @@ export default function ProjectDetail({ project, onBack, onNext, onPrev, activeC
               </p>
               
               <button 
-                className="text-xs tracking-[0.2em] font-semibold text-white uppercase border-b border-white hover:text-neutral-300 hover:border-neutral-300 transition-all pb-1 tracking-widest block w-max"
+                onClick={onReadMore}
+                className="text-xs tracking-[0.2em] font-semibold text-white uppercase border-b border-white hover:text-neutral-300 hover:border-neutral-300 transition-all pb-1 tracking-widest block w-max cursor-pointer"
               >
                 READ MORE
               </button>
