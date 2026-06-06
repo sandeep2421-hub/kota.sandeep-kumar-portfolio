@@ -73,7 +73,7 @@ export default function App() {
       saved.includes("ForBiggerJoyrides.mp4") ||
       saved.includes("gemini.google.com")
     ) {
-      return "/background.mp4";
+      return "background.mp4";
     }
     return saved;
   });
@@ -1340,18 +1340,18 @@ export default function App() {
                         <div className="grid grid-cols-1 gap-1">
                           <button
                             type="button"
-                            onClick={() => setVideoUrl("/background.mp4")}
+                            onClick={() => setVideoUrl("background.mp4")}
                             className={`py-1.5 px-2 rounded border text-[9px] text-left transition-all duration-200 cursor-pointer uppercase flex justify-between items-center ${
-                              videoUrl === "/background.mp4"
+                              videoUrl === "background.mp4"
                                 ? "border-cyan-500 text-cyan-400 bg-cyan-950/20"
                                 : "border-neutral-900 text-neutral-600 bg-black/30"
                             }`}
                             style={{
-                              borderColor: videoUrl === "/background.mp4" ? activeColor : undefined,
-                              color: videoUrl === "/background.mp4" ? activeColor : undefined,
+                              borderColor: videoUrl === "background.mp4" ? activeColor : undefined,
+                              color: videoUrl === "background.mp4" ? activeColor : undefined,
                             }}
                           >
-                            <span>/background.mp4</span>
+                            <span>background.mp4</span>
                             <span className="text-[7px] text-neutral-500 lowercase opacity-70">(perfect smooth loop)</span>
                           </button>
                         </div>

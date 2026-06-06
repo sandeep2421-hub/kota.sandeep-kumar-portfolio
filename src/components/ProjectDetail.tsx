@@ -28,7 +28,7 @@ export default function ProjectDetail({ project, onBack, onNext, onPrev, activeC
           muted 
           playsInline
         >
-          <source src="/moon.mp4" type="video/mp4" />
+          <source src="moon.mp4" type="video/mp4" />
         </video>
         {/* Mobile Fade-Out Gradient */}
         <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#000000] via-[#000000]/80 to-transparent md:hidden" />
