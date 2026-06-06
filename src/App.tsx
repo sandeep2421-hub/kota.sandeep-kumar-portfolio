@@ -166,7 +166,13 @@ export default function App() {
         setTerminalLogs((prev) => [...prev, logs[step]]);
         setCompilingStep(step + 1);
         step += 1;
-        interval = setTimeout(addLogStep, 500 + Math.random() * 400);
+        if (step === logs.length) {
+          interval = setTimeout(() => {
+            setCompilingStep(9);
+          }, 1000);
+        } else {
+          interval = setTimeout(addLogStep, 500 + Math.random() * 400);
+        }
       }
     };
 
@@ -1721,14 +1727,14 @@ export default function App() {
                 </AnimatePresence>
 
                 {/* Compiling loading bar if running */}
-                {compilingStep < 8 && (
+                {compilingStep < 9 && (
                   <div className="flex items-center gap-2 text-neutral-500 pt-2 border-t border-neutral-950 select-none">
                     <span>BUILD PROGRESS:</span>
                     <div className="flex-1 h-3 bg-neutral-950 rounded relative overflow-hidden border border-neutral-900">
                       <motion.div
                         className="h-full bg-emerald-500"
                         initial={{ width: "0%" }}
-                        animate={{ width: `${(compilingStep / 8) * 100}%` }}
+                        animate={{ width: `${Math.min(100, (compilingStep / 8) * 100)}%` }}
                       />
                     </div>
                   </div>
@@ -1736,7 +1742,7 @@ export default function App() {
               </div>
 
               {/* Simulated Live Action Sandbox Mock Dashboard after successful compile */}
-              {compilingStep === 8 && (
+              {compilingStep === 9 && (
                 <motion.div
                   id="sandbox-mock-dashboard"
                   initial={{ opacity: 0, y: 15 }}
