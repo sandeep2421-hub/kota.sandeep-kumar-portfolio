@@ -16,14 +16,17 @@ import {
   Globe,
   Radio,
 } from "lucide-react";
-import { PORTFOLIO_PROJECTS } from "./data";
+import { PORTFOLIO_PROJECTS, PERSONAL_INFO } from "./data";
 import { Project } from "./types";
 import HeroLoader from "./components/HeroLoader";
 import ProjectDetail from "./components/ProjectDetail";
 import ProjectNarrative from "./components/ProjectNarrative";
+import ResumeSections from "./components/ResumeSections";
+import DashboardView from "./components/DashboardView";
+import LiveAppSimulator from "./components/LiveAppSimulator";
 
-function getYouTubeId(url: string): string | null {
-  if (!url) return null;
+function getYouTubeId(url?: string | null): string | null {
+  if (!url || typeof url !== "string") return null;
   const trimmed = url.trim();
 
   // If the user pastes the Gemini share link, map it to the actual YouTube video within that share link
@@ -56,6 +59,8 @@ export default function App() {
   const [overclock, setOverclock] = useState(false);
   const [theaterMode, setTheaterMode] = useState(false);
   const [showConfig, setShowConfig] = useState(false);
+  const [activeResumeSection, setActiveResumeSection] = useState<'education' | 'research' | 'skills' | 'contact' | null>(null);
+  const [activeSimulatorProject, setActiveSimulatorProject] = useState<Project | null>(null);
 
   // Custom config states selectable in settings
   const [scanlines, setScanlines] = useState(true);
@@ -64,37 +69,58 @@ export default function App() {
 
   // Video Background States with localStorage fallback
   const [enableVideoBackground, setEnableVideoBackground] = useState(() => {
-    const saved = localStorage.getItem("enable_video_bg");
-    return saved !== null ? saved === "true" : true;
+    try {
+      const saved = localStorage.getItem("enable_video_bg");
+      return saved !== null ? saved === "true" : true;
+    } catch {
+      return true;
+    }
   });
-  const [videoUrl, setVideoUrl] = useState(() => {
-    const saved = localStorage.getItem("video_bg_url");
-    if (
-      !saved ||
-      saved.includes("ForBiggerJoyrides.mp4") ||
-      saved.includes("gemini.google.com")
-    ) {
+  const [videoUrl, setVideoUrl] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem("video_bg_url");
+      if (
+        !saved ||
+        typeof saved !== "string" ||
+        saved === "undefined" ||
+        saved === "null" ||
+        saved.includes("ForBiggerJoyrides.mp4") ||
+        saved.includes("gemini.google.com")
+      ) {
+        return "background.mp4";
+      }
+      return saved;
+    } catch {
       return "background.mp4";
     }
-    return saved;
   });
   const [videoOpacity, setVideoOpacity] = useState(() => {
-    const saved = localStorage.getItem("video_bg_opacity");
-    if (saved !== null) {
-      if (saved === "25") {
-        // override previous 25 default
-        return 60;
+    try {
+      const saved = localStorage.getItem("video_bg_opacity");
+      if (saved !== null) {
+        if (saved === "25") {
+          return 60;
+        }
+        return Number(saved) || 60;
       }
-      return Number(saved);
+      return 60;
+    } catch {
+      return 60;
     }
-    return 60;
   });
   const [videoBlendMode, setVideoBlendMode] = useState<string>(() => {
-    return localStorage.getItem("video_bg_blend_mode") || "normal"; // default to normal for maximum browser compatibility
+    try {
+      return localStorage.getItem("video_bg_blend_mode") || "normal";
+    } catch {
+      return "normal";
+    }
   });
   const [videoStatus, setVideoStatus] = useState<
     "loading" | "playing" | "error"
   >("loading");
+
+  // Safe helper to check videoUrl inclusion
+  const isVideoUrl = (str: string) => (videoUrl || "").includes(str);
 
   // Persist states using primitive dependencies
   useEffect(() => {
@@ -123,8 +149,6 @@ export default function App() {
   const [terminalLogs, setTerminalLogs] = useState<string[]>([]);
   const [compilingStep, setCompilingStep] = useState(0);
 
-  const currentProject = PORTFOLIO_PROJECTS[currentIndex];
-
   // Cycling forward through portfolio projects
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % PORTFOLIO_PROJECTS.length);
@@ -148,13 +172,13 @@ export default function App() {
   useEffect(() => {
     if (!demoActive) return;
 
+    const projectStackStr = currentProject.techStack.join(" • ");
     const logs = [
       `[SYS]: INITIALIZING KOTA.SANDEEP.KUMAR OS v5.08...`,
       `[SYS]: CONNECTING DIRECT PATHWAY TO ${currentProject.title.toUpperCase()}...`,
-      `[SYS]: VERIFYING SECURE SSL CHANNELS & CONTAINER SUITE...`,
-      `[SYS]: COMPILING TYPESCRIPT ENGINE AND ASSETS...`,
-      `[SYS]: DRIZZLE PG CONNECTION ESTABLISHED SUCCESSFULLY.`,
-      `[SYS]: RENDERING CYBERNETIC DEEP LAYOUT AT PORT 3000...`,
+      `[SYS]: VERIFYING SECURE CHANNELS (${projectStackStr})...`,
+      `[SYS]: COMPILING ENGINE ASSETS & RUNTIME DEPENDENCIES...`,
+      `[SYS]: ${currentProject.specs.focus.toUpperCase()} SYSTEM INITIALIZED SUCCESSFULLY.`,
       `[SYS]: ACCELERATING GPU NODE CORES FOR RENDER SYNCHRONICITIES...`,
       `[SUCCESS]: DEPLOYMENT OF '${currentProject.title.toUpperCase()}' COMPLETE! LIVE ACCESSIBLE ENVIRONMENT CREATED.`,
     ];
@@ -196,8 +220,11 @@ export default function App() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentIndex]);
 
+  const safeIndex = Math.max(0, Math.min(currentIndex || 0, PORTFOLIO_PROJECTS.length - 1));
+  const currentProject = PORTFOLIO_PROJECTS[safeIndex] || PORTFOLIO_PROJECTS[0];
+
   const activeColor =
-    customColor || (overclock ? "#ff3333" : currentProject.themeColor);
+    customColor || (overclock ? "#ff3333" : (currentProject?.themeColor || "#00f3ff"));
 
   return (
     <>
@@ -238,7 +265,7 @@ export default function App() {
 
       {/* BACKGROUND VIDEO LOOP */}
       {enableVideoBackground && (
-        <div className="absolute top-0 right-0 left-0 h-[55vh] md:inset-0 md:h-full z-0 pointer-events-none overflow-hidden transition-opacity duration-1000">
+        <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden transition-opacity duration-1000">
           {(() => {
             const ytId = getYouTubeId(videoUrl);
             if (ytId) {
@@ -307,7 +334,7 @@ export default function App() {
       {/* BACKGROUND GRAPHIC BLOBS (Muted unless overclocked) */}
       <div
         id="bg-glow"
-        className="absolute top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 ease-out z-0"
+        className="fixed top-1/4 left-1/3 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full blur-[140px] pointer-events-none transition-all duration-1000 ease-out z-0"
         style={{
           background: `radial-gradient(circle, ${activeColor}15 0%, transparent 70%)`,
         }}
@@ -317,693 +344,27 @@ export default function App() {
         {view === 'main' && (
           <motion.div
             key="main-view"
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col justify-between flex-grow h-full w-full z-10 space-y-8"
+            exit={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full h-full z-10"
           >
-      {/* ================= HEADER & NAV SECTION ================= */}
-      <header
-        id="portfolio-header"
-        className="w-full flex items-center justify-between z-10 select-none"
-      >
-        {/* Simple visual utility tag layout matching target screen layout */}
-        <div className="flex items-center gap-3">
-          <div
-            className="w-2.5 h-2.5 rounded-full animate-pulse transition-all duration-300"
-            style={{ backgroundColor: activeColor }}
-          />
-          <span className="font-mono text-[10px] tracking-[0.25em] text-neutral-500 uppercase">
-            {overclock
-              ? "CORES RUNNING OVERCLOCKED : STATE 5.8GHZ"
-              : "SYS CORE ACTIVE // ONLINE"}
-          </span>
-        </div>
-
-        {/* Dynamic Project Index Navigation Bar (Exactly mimics '1/20 --------- NEXT PRODUCT') */}
-        <div className="flex items-center gap-6 font-mono text-[11px]">
-          <span className="text-neutral-400 tracking-wider font-semibold">
-            {String(currentIndex + 1).padStart(2, "0")} /{" "}
-            {String(PORTFOLIO_PROJECTS.length).padStart(2, "0")}
-          </span>
-          <div className="w-16 md:w-28 h-px bg-neutral-800 relative overflow-hidden">
-            <motion.div
-              className="absolute h-full left-0 top-0 transition-colors duration-500"
-              style={{ backgroundColor: activeColor }}
-              initial={{ width: "20%" }}
-              animate={{
-                width: `${((currentIndex + 1) / PORTFOLIO_PROJECTS.length) * 100}%`,
-              }}
-              transition={{ duration: 0.4 }}
+            <DashboardView
+              currentIndex={currentIndex}
+              setCurrentIndex={setCurrentIndex}
+              activeColor={activeColor}
+              overclock={overclock}
+              setOverclock={setOverclock}
+              theaterMode={theaterMode}
+              setTheaterMode={setTheaterMode}
+              setGridOpacity={setGridOpacity}
+              showConfig={showConfig}
+              setShowConfig={setShowConfig}
+              onOpenDetail={() => setView('detail')}
+              onTriggerDemo={triggerDemo}
+              onOpenSimulator={(p) => setActiveSimulatorProject(p)}
             />
-          </div>
-          <button
-            id="next-project-btn"
-            onClick={() => setView('detail')}
-            className="group flex items-center gap-2 text-neutral-400 hover:text-white transition-all cursor-pointer font-semibold uppercase tracking-widest text-[11px]"
-          >
-            <span>NEXT PROJECT</span>
-            <ChevronRight
-              className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform"
-              style={{ color: activeColor }}
-            />
-          </button>
-        </div>
-      </header>
-
-      {/* ================= PRIMARY GRID CONTENT ================= */}
-      <main
-        id="portfolio-main-grid"
-        className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 my-auto z-10 py-8 pt-[45vh] md:pt-0 lg:py-0"
-      >
-        {/* LEFT COLUMN: TITLE AND CONTROLS (6 COLS) */}
-        <section className="lg:col-span-7 flex flex-col justify-center space-y-6 lg:space-y-10 text-left">
-          {/* TITLE BLOCK - EXACTLY CHAR MATCHED IN PROPORTION */}
-          <div className="space-y-1 block select-text">
-            <motion.h1
-              id="portfolio-title-line-1"
-              key={`h1-l1-${overclock}`}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-[4rem] sm:text-[5.5rem] xl:text-[6.8rem] leading-[0.9] font-black uppercase text-white font-display tracking-tighter"
-              style={{
-                textShadow: overclock
-                  ? "3px 0px 0px rgba(255,0,0,0.5), -3px 0px 0px rgba(0,255,255,0.5)"
-                  : "none",
-              }}
-            >
-              KOTA.
-            </motion.h1>
-
-            <motion.h1
-              id="portfolio-title-line-2"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-[4rem] sm:text-[5.5rem] xl:text-[6.8rem] leading-[0.9] font-black uppercase tracking-tighter font-display text-transparent"
-              style={{
-                WebkitTextStroke: "1px rgba(255, 255, 255, 0.95)",
-                textStroke: "1px rgba(255, 255, 255, 0.95)",
-              }}
-            >
-              SANDEEP
-            </motion.h1>
-
-            <motion.h1
-              id="portfolio-title-line-3"
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-[4rem] sm:text-[5.5rem] xl:text-[6.8rem] leading-[0.9] font-black uppercase text-white font-display tracking-tight"
-            >
-              KUMAR
-            </motion.h1>
-          </div>
-
-          {/* PORTFOLIO DESCRIPTION - EXACTLY 133 CHARACTERS LENGTH FOR GEOMETRIC BALANCE */}
-          <motion.div
-            id="portfolio-desc"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="max-w-xl text-neutral-400 text-sm md:text-base leading-relaxed tracking-wider font-light font-sans select-text"
-          >
-            Architects with high-end skills and a zero-gravity vision for those
-            who don’t just watch the future—they build it. Shift your coding.
-          </motion.div>
-
-          {/* INTERACTIVE ROUNDED CIRCLE ACTIONS (Settings, Immersive Scan, Overclock) */}
-          <motion.div
-            id="controls-hub"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="flex items-center gap-4 pt-2"
-          >
-            {/* Gear Configuration Trigger */}
-            <button
-              id="gear-cfg-btn"
-              onClick={() => setShowConfig(!showConfig)}
-              className="w-11 h-11 rounded-full border border-neutral-800 hover:border-white flex items-center justify-center cursor-pointer transition-all duration-300 relative group bg-black/40 backdrop-blur-sm"
-              style={{
-                borderColor: showConfig ? activeColor : undefined,
-                boxShadow: showConfig ? `0 0 10px ${activeColor}20` : undefined,
-              }}
-              title="System Configuration"
-            >
-              <Settings
-                className={`w-4 h-4 transition-transform duration-500 ${showConfig ? "rotate-90 text-white" : "text-neutral-400 group-hover:text-white"}`}
-                style={{ color: showConfig ? activeColor : undefined }}
-              />
-              <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-[9px] font-mono whitespace-nowrap py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                SYSTEM CONFIG
-              </span>
-            </button>
-
-            {/* Immersive Scan / Grid Toggle */}
-            <button
-              id="theater-mode-btn"
-              onClick={() => {
-                setTheaterMode(!theaterMode);
-                setGridOpacity(theaterMode ? 20 : 6);
-              }}
-              className="w-11 h-11 rounded-full border border-neutral-800 hover:border-white flex items-center justify-center cursor-pointer transition-all duration-300 relative group bg-black/40 backdrop-blur-sm"
-              style={{
-                borderColor: theaterMode ? activeColor : undefined,
-                boxShadow: theaterMode
-                  ? `0 0 10px ${activeColor}20`
-                  : undefined,
-              }}
-              title="Toggle Fullscreen Focus"
-            >
-              <Scan
-                className={`w-4 h-4 transition-transform ${theaterMode ? "scale-110" : "text-neutral-400 group-hover:text-white"}`}
-                style={{ color: theaterMode ? activeColor : undefined }}
-              />
-              <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-[9px] font-mono whitespace-nowrap py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                THEATER FOCUS
-              </span>
-            </button>
-
-            {/* Overclock Extreme Core Mode */}
-            <button
-              id="overclock-btn"
-              onClick={() => setOverclock(!overclock)}
-              className="w-11 h-11 rounded-full border border-neutral-800 hover:border-white flex items-center justify-center cursor-pointer transition-all duration-500 relative group bg-black/40 backdrop-blur-sm overflow-hidden"
-              style={{
-                borderColor: overclock ? "#ff3333" : undefined,
-                boxShadow: overclock
-                  ? `0 0 12px rgba(255,51,51,0.4)`
-                  : undefined,
-                backgroundColor: overclock ? "rgba(255,51,51,0.05)" : undefined,
-              }}
-              title="Toggle Overclock Engine"
-            >
-              <Zap
-                className={`w-4 h-4 transition-all duration-300 ${overclock ? "animate-bounce text-red-500 fill-red-500" : "text-neutral-400 group-hover:text-white"}`}
-              />
-              <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-neutral-900 border border-neutral-800 text-[9px] font-mono whitespace-nowrap py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                {overclock ? "DISABLE OVERCLOCK" : "OVERCLOCK CORE"}
-              </span>
-            </button>
-
-            {/* Extra mini status gauge */}
-            <div className="h-6 w-px bg-neutral-800 mx-1 hidden sm:block" />
-            <div className="flex-col hidden sm:flex text-left">
-              <span className="text-[8px] font-mono text-neutral-500 uppercase tracking-widest leading-none">
-                FRAMEWORK
-              </span>
-              <span className="text-[10px] font-mono font-medium text-neutral-300 tracking-wider">
-                VITE / TS v5.3
-              </span>
-            </div>
-          </motion.div>
-        </section>
-
-        {/* RIGHT COLUMN: TECHNICAL SPECS TABLE (5 COLS) */}
-        <section
-          id="tech-specs-section"
-          className="lg:col-span-5 flex flex-col justify-center space-y-6 xl:pl-10"
-        >
-          {/* TECHNICAL SPECS FRAME */}
-          <div className="border-t border-b border-neutral-900 py-4 space-y-3">
-            <div className="flex items-center justify-between tracking-[0.25em] text-neutral-500 text-[10px] font-mono font-bold uppercase pb-1">
-              <span>TECHNICAL SPECS</span>
-              <span style={{ color: activeColor }} className="text-[9px]">
-                READY // EST
-              </span>
-            </div>
-
-            {/* SPEC ROWS (Updating dynamically per selected project) */}
-            <div className="divide-y divide-neutral-900 border-t border-neutral-900">
-              {/* Row 1: Skills */}
-              <div
-                id="spec-row-skills"
-                className="grid grid-cols-12 py-3.5 items-center"
-              >
-                <span className="col-span-4 font-mono text-xs uppercase tracking-wider text-neutral-500 font-bold self-center">
-                  Skills
-                </span>
-                <span className="col-span-8 font-mono text-xs text-white/90 font-medium text-right tracking-wide truncate">
-                  {currentProject.specs.skills}
-                </span>
-              </div>
-
-              {/* Row 2: Roles */}
-              <div
-                id="spec-row-roles"
-                className="grid grid-cols-12 py-3.5 items-center"
-              >
-                <span className="col-span-4 font-mono text-xs uppercase tracking-wider text-neutral-500 font-bold self-center">
-                  Roles
-                </span>
-                <span className="col-span-8 font-mono text-xs text-white/90 font-medium text-right tracking-wide truncate">
-                  {currentProject.specs.roles}
-                </span>
-              </div>
-
-              {/* Row 3: Status */}
-              <div
-                id="spec-row-status"
-                className="grid grid-cols-12 py-3.5 items-center"
-              >
-                <span className="col-span-4 font-mono text-xs uppercase tracking-wider text-neutral-500 font-bold self-center">
-                  Status
-                </span>
-                <span
-                  className="col-span-8 font-mono text-xs text-white/90 font-medium text-right tracking-wide truncate"
-                  style={{ color: overclock ? "#ff3333" : undefined }}
-                >
-                  {currentProject.specs.status}
-                </span>
-              </div>
-
-              {/* Row 4: Focus */}
-              <div
-                id="spec-row-focus"
-                className="grid grid-cols-12 py-3.5 items-center"
-              >
-                <span className="col-span-4 font-mono text-xs uppercase tracking-wider text-neutral-500 font-bold self-center">
-                  Focus
-                </span>
-                <span className="col-span-8 font-mono text-xs text-white/90 font-medium text-right tracking-wide truncate">
-                  {currentProject.specs.focus}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick cycle dots for visual page indicator */}
-          <div className="flex items-center gap-2 pt-2 justify-end">
-            {PORTFOLIO_PROJECTS.map((p, index) => (
-              <button
-                key={`dot-${index}`}
-                onClick={() => setCurrentIndex(index)}
-                className="w-5 h-1.5 rounded-full transition-all duration-300 cursor-pointer"
-                style={{
-                  backgroundColor:
-                    index === currentIndex ? activeColor : "#1c1c1c",
-                  boxShadow:
-                    index === currentIndex
-                      ? `0 0 8px ${activeColor}55`
-                      : "none",
-                }}
-                title={`Go to Project ${index + 1}`}
-              />
-            ))}
-          </div>
-        </section>
-      </main>
-
-      {/* ================= BOTTOM ROW: DYNAMIC PORTFOLIO CARD & BADGES ================= */}
-      <footer
-        id="portfolio-footer"
-        className="w-full grid grid-cols-1 xl:grid-cols-12 gap-8 items-end pt-8 lg:pt-0 z-10 select-none"
-      >
-        {/* BOTTOM LEFT: PR-01 NEURAL COVER DISPLAY (Exactly mimics bottom-left card in target image) */}
-        <div className="xl:col-span-7 flex justify-start">
-          <motion.div
-            id="featured-project-card"
-            key={`card-${currentIndex}`}
-            initial={{ opacity: 0, x: -15 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ type: "spring", stiffness: 100, damping: 15 }}
-            className="w-full max-w-xl rounded-2xl border border-neutral-900/85 bg-neutral-950/70 p-3.5 flex flex-col sm:flex-row items-center gap-4 backdrop-blur-md relative"
-            style={{
-              boxShadow: `0 10px 30px -15px ${activeColor}15`,
-            }}
-          >
-            {/* Visual Dynamic Generator (replicates futuristic 3D graphics showing glowing nodes/connections) */}
-            <div
-              id="project-visual-box"
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg overflow-hidden bg-black/60 relative flex-shrink-0 flex items-center justify-center border border-neutral-900"
-            >
-              {/* Dynamic canvas render with SVG */}
-              <svg className="w-full h-full p-2" viewBox="0 0 100 100">
-                <defs>
-                  <linearGradient
-                    id="neonGlowGrad"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
-                    <stop
-                      offset="0%"
-                      stopColor={activeColor}
-                      stopOpacity="0.8"
-                    />
-                    <stop offset="100%" stopColor="#000000" stopOpacity="0.1" />
-                  </linearGradient>
-                </defs>
-
-                {/* Grid backdrop */}
-                <path
-                  d="M 10,0 L 10,100 M 30,0 L 30,100 M 50,0 L 50,100 M 70,0 L 70,100 M 90,0 L 90,100"
-                  stroke="#111"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M 0,10 L 100,10 M 0,30 L 100,30 M 0,50 L 100,50 M 0,70 L 100,70 M 0,90 L 100,90"
-                  stroke="#111"
-                  strokeWidth="0.5"
-                  strokeDasharray="2,2"
-                />
-
-                {/* Dynamic SVG Visuals depending on project type */}
-                {currentProject.iconType === "helix" && (
-                  <g>
-                    {/* Spinning DNA / Helix wires */}
-                    <motion.path
-                      d="M 20,50 Q 35,20 50,50 T 80,50"
-                      fill="none"
-                      stroke={activeColor}
-                      strokeWidth="2.5"
-                      animate={{
-                        d: [
-                          "M 20,50 Q 35,20 50,50 T 80,50",
-                          "M 20,50 Q 35,80 50,50 T 80,50",
-                          "M 20,50 Q 35,20 50,50 T 80,50",
-                        ],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 4,
-                        ease: "easeInOut",
-                      }}
-                    />
-                    <motion.path
-                      d="M 20,50 Q 35,80 50,50 T 80,50"
-                      fill="none"
-                      stroke={`${activeColor}40`}
-                      strokeWidth="1.5"
-                      animate={{
-                        d: [
-                          "M 20,50 Q 35,80 50,50 T 80,50",
-                          "M 20,50 Q 35,20 50,50 T 80,50",
-                          "M 20,50 Q 35,80 50,50 T 80,50",
-                        ],
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 4,
-                        ease: "easeInOut",
-                      }}
-                    />
-                    <circle cx="20" cy="50" r="3" fill={activeColor} />
-                    <circle cx="35" cy="35" r="2.5" fill="#fff" />
-                    <circle cx="50" cy="50" r="3" fill={activeColor} />
-                    <circle cx="65" cy="65" r="2.5" fill="#fff" />
-                    <circle cx="80" cy="50" r="3" fill={activeColor} />
-                  </g>
-                )}
-
-                {currentProject.iconType === "chat" && (
-                  <g>
-                    {/* Pulsating Websocket rings / waves */}
-                    <motion.circle
-                      cx="50"
-                      cy="50"
-                      r="10"
-                      fill="none"
-                      stroke={activeColor}
-                      strokeWidth="1"
-                      animate={{ r: [10, 38], opacity: [1, 0] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 2.5,
-                        ease: "easeOut",
-                      }}
-                    />
-                    <motion.circle
-                      cx="50"
-                      cy="50"
-                      r="20"
-                      fill="none"
-                      stroke={`${activeColor}80`}
-                      strokeWidth="1.5"
-                      animate={{ r: [1, 40], opacity: [0.3, 0.8, 0] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 3.5,
-                        ease: "easeOut",
-                        delay: 1,
-                      }}
-                    />
-                    <rect
-                      x="42"
-                      y="42"
-                      width="16"
-                      height="16"
-                      rx="4"
-                      fill="#000"
-                      stroke={activeColor}
-                      strokeWidth="2"
-                    />
-                    <circle cx="50" cy="50" r="3.5" fill={activeColor} />
-                  </g>
-                )}
-
-                {currentProject.iconType === "database" && (
-                  <g>
-                    {/* Isometric rotating cyber cube */}
-                    <motion.g
-                      animate={{ rotate: 360 }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 15,
-                        ease: "linear",
-                      }}
-                      transform="translate(50,50)"
-                    >
-                      {/* Isometric hexagon base */}
-                      <polygon
-                        points="0,-25 22,-12 22,12 0,25 -22,12 -22,-12"
-                        fill="none"
-                        stroke={activeColor}
-                        strokeWidth="2"
-                      />
-                      <line
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="25"
-                        stroke={activeColor}
-                        strokeWidth="1.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="0"
-                        x2="22"
-                        y2="-12"
-                        stroke={activeColor}
-                        strokeWidth="1.5"
-                      />
-                      <line
-                        x1="0"
-                        y1="0"
-                        x2="-22"
-                        y2="-12"
-                        stroke={activeColor}
-                        strokeWidth="1.5"
-                      />
-                    </motion.g>
-                    <motion.circle
-                      cx="50"
-                      cy="50"
-                      r="4"
-                      fill="#fff"
-                      animate={{ scale: [1, 1.8, 1] }}
-                      transition={{ repeat: Infinity, duration: 3 }}
-                    />
-                  </g>
-                )}
-
-                {currentProject.iconType === "audio" && (
-                  <g>
-                    {/* Reactive soundwaves circle */}
-                    {Array.from({ length: 8 }).map((_, i) => {
-                      const angle = (i * Math.PI) / 4;
-                      const x1 = 50 + Math.cos(angle) * 15;
-                      const y1 = 50 + Math.sin(angle) * 15;
-                      const x2 = 50 + Math.cos(angle) * 28;
-                      const y2 = 50 + Math.sin(angle) * 28;
-
-                      return (
-                        <motion.line
-                          key={i}
-                          x1={x1}
-                          y1={y1}
-                          x2={x2}
-                          y2={y2}
-                          stroke={activeColor}
-                          strokeWidth="2.5"
-                          strokeLinecap="round"
-                          animate={{
-                            x2: [
-                              x2,
-                              50 + Math.cos(angle) * (20 + Math.random() * 14),
-                              x2,
-                            ],
-                          }}
-                          transition={{
-                            repeat: Infinity,
-                            duration: 1 + Math.random() * 0.8,
-                          }}
-                        />
-                      );
-                    })}
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="10"
-                      fill="none"
-                      stroke={activeColor}
-                      strokeWidth="1"
-                    />
-                  </g>
-                )}
-
-                {currentProject.iconType === "vision" && (
-                  <g>
-                    {/* Cyber Target scanning grid */}
-                    <motion.line
-                      x1="10"
-                      y1="50"
-                      x2="90"
-                      y2="50"
-                      stroke={activeColor}
-                      strokeWidth="1"
-                      animate={{ y1: [15, 85, 15], y2: [15, 85, 15] }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 3.5,
-                        ease: "easeInOut",
-                      }}
-                    />
-                    <circle
-                      cx="50"
-                      cy="50"
-                      r="30"
-                      fill="none"
-                      stroke={`${activeColor}30`}
-                      strokeWidth="1"
-                      strokeDasharray="3,3"
-                    />
-                    <rect
-                      x="44"
-                      y="44"
-                      width="12"
-                      height="12"
-                      fill="none"
-                      stroke={activeColor}
-                      strokeWidth="1.5"
-                    />
-                    <circle cx="34" cy="30" r="2.5" fill="#ff3333" />
-                    <circle cx="68" cy="72" r="2.5" fill={activeColor} />
-                  </g>
-                )}
-              </svg>
-
-              {/* Overclock particle blur overlay */}
-              {overclock && (
-                <div className="absolute inset-0 bg-red-600/10 mix-blend-color-dodge animate-pulse pointer-events-none" />
-              )}
-            </div>
-
-            {/* DESCRIPTION/TITLE BLOCK OF PROJECT CARD */}
-            <div className="flex-1 text-left space-y-2.5 w-full">
-              <div className="space-y-0.5">
-                <span className="font-mono text-[9px] tracking-widest text-neutral-500 font-bold block uppercase">
-                  PROJECT SHOWCASE
-                </span>
-                <span className="font-mono text-[14px] font-bold text-white tracking-wider block">
-                  {currentProject.id}
-                </span>
-              </div>
-
-              <p className="text-neutral-400 text-[11px] sm:text-[12px] leading-relaxed tracking-wide min-h-[36px]">
-                {currentProject.description}
-              </p>
-
-              {/* ACTION: 'Add to Cart' rewritten perfectly for Portfolio */}
-              <button
-                id="explore-project-launcher"
-                onClick={triggerDemo}
-                className="w-full sm:w-auto px-4 py-1.5 rounded-full text-[10px] font-semibold tracking-widest uppercase cursor-pointer transition-all duration-300 relative overflow-hidden group border"
-                style={{
-                  backgroundColor: `${activeColor}12`,
-                  borderColor: `${activeColor}33`,
-                  color: "#ffffff",
-                }}
-              >
-                {/* background slide transition */}
-                <span
-                  className="absolute inset-0 w-0 group-hover:w-full transition-all duration-300 -z-10"
-                  style={{ backgroundColor: activeColor }}
-                />
-                <span className="relative z-10 flex items-center justify-center gap-1.5 group-hover:text-black">
-                  CONNECT CORE
-                  <ExternalLink className="w-3 h-3" />
-                </span>
-              </button>
-            </div>
-          </motion.div>
-        </div>
-
-        {/* BOTTOM RIGHT: FIXED BADGES MATCHING Screenshot (8K RAW -> NEXTJS, ULTRA-WIDE -> FULL-STACK etc.) */}
-        <div id="badge-dock" className="xl:col-span-5 flex-col space-y-4">
-          {/* Badge dock layout with absolute character match & custom scale motion container */}
-          <div className="flex flex-wrap items-center justify-end gap-2 text-[10px] font-mono tracking-widest uppercase font-bold text-neutral-400">
-            {/* NEXTJS badge (6 chars) */}
-            <div
-              className="bg-neutral-900 border border-neutral-800 text-white rounded-full px-4 py-2 transition-all duration-300 hover:scale-105"
-              style={{
-                boxShadow: overclock
-                  ? "0 0 10px rgba(239, 68, 68, 0.1)"
-                  : "none",
-              }}
-            >
-              NEXTJS
-            </div>
-
-            {/* AI badge (2 chars) */}
-            <div className="bg-neutral-900 border border-neutral-800 text-white rounded-full px-3.5 py-2 transition-all duration-300 hover:scale-105">
-              AI
-            </div>
-
-            {/* FULL-STACK badge (10 chars) */}
-            <div className="bg-neutral-900 border border-neutral-800 text-white rounded-full px-4.5 py-2 transition-all duration-300 hover:scale-105">
-              FULL-STACK
-            </div>
-
-            {/* CLOUD-SCALE badge (11 chars) */}
-            <div className="bg-white text-black border border-white rounded-full px-4.5 py-2 transition-all duration-300 hover:bg-transparent hover:text-white">
-              CLOUD-SCALE
-            </div>
-          </div>
-
-          {/* Twinkling four-pointed sci-fi star (exactly mimics star in bottom right of screenshot) */}
-          <div className="flex items-center justify-end gap-3 text-neutral-500 font-mono text-[9px] tracking-wider font-semibold">
-            <span>K.S.K © 2026</span>
-            <motion.div
-              animate={{ rotate: 360, scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
-              className="origin-center"
-            >
-              <svg
-                className="w-5 h-5"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                style={{ color: activeColor }}
-              >
-                <path d="M12 2L14.83 9.17L22 12L14.83 14.83L12 22L9.17 14.83L2 12L9.17 9.17L12 2Z" />
-              </svg>
-            </motion.div>
-          </div>
-        </div>
-      </footer>
           </motion.div>
         )}
         
@@ -1285,15 +646,15 @@ export default function App() {
                               )
                             }
                             className={`py-1.5 px-0.5 rounded border text-[8px] truncate transition-all duration-200 cursor-pointer uppercase ${
-                              videoUrl.includes("vhbkCEnNXcY")
+                              isVideoUrl("vhbkCEnNXcY")
                                 ? "border-cyan-500 text-cyan-400 bg-cyan-950/20"
                                 : "border-neutral-900 text-neutral-600 bg-black/30"
                             }`}
                             style={{
-                              borderColor: videoUrl.includes("vhbkCEnNXcY")
+                              borderColor: isVideoUrl("vhbkCEnNXcY")
                                 ? activeColor
                                 : undefined,
-                              color: videoUrl.includes("vhbkCEnNXcY")
+                              color: isVideoUrl("vhbkCEnNXcY")
                                 ? activeColor
                                 : undefined,
                             }}
@@ -1308,15 +669,15 @@ export default function App() {
                               )
                             }
                             className={`py-1.5 px-0.5 rounded border text-[8px] truncate transition-all duration-200 cursor-pointer uppercase ${
-                              videoUrl.includes("lYah5-xEeck")
+                              isVideoUrl("lYah5-xEeck")
                                 ? "border-cyan-500 text-cyan-400 bg-cyan-950/20"
                                 : "border-neutral-900 text-neutral-600 bg-black/30"
                             }`}
                             style={{
-                              borderColor: videoUrl.includes("lYah5-xEeck")
+                              borderColor: isVideoUrl("lYah5-xEeck")
                                 ? activeColor
                                 : undefined,
-                              color: videoUrl.includes("lYah5-xEeck")
+                              color: isVideoUrl("lYah5-xEeck")
                                 ? activeColor
                                 : undefined,
                             }}
@@ -1331,15 +692,15 @@ export default function App() {
                               )
                             }
                             className={`py-1.5 px-0.5 rounded border text-[8px] truncate transition-all duration-200 cursor-pointer uppercase ${
-                              videoUrl.includes("gemini.google.com/share/2a250c55c6a3") || videoUrl.includes("TZGWNH-iaHk")
+                              isVideoUrl("gemini.google.com/share/2a250c55c6a3") || isVideoUrl("TZGWNH-iaHk")
                                 ? "border-cyan-500 text-cyan-400 bg-cyan-950/20"
                                 : "border-neutral-900 text-neutral-600 bg-black/30"
                             }`}
                             style={{
-                              borderColor: videoUrl.includes("gemini.google.com/share/2a250c55c6a3") || videoUrl.includes("TZGWNH-iaHk")
+                              borderColor: isVideoUrl("gemini.google.com/share/2a250c55c6a3") || isVideoUrl("TZGWNH-iaHk")
                                 ? activeColor
                                 : undefined,
-                              color: videoUrl.includes("gemini.google.com/share/2a250c55c6a3") || videoUrl.includes("TZGWNH-iaHk")
+                              color: isVideoUrl("gemini.google.com/share/2a250c55c6a3") || isVideoUrl("TZGWNH-iaHk")
                                 ? activeColor
                                 : undefined,
                             }}
@@ -1725,9 +1086,9 @@ export default function App() {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.2 }}
                       className={
-                        log.includes("SUCCESS")
+                        (log || "").includes("SUCCESS")
                           ? "text-emerald-400 font-bold"
-                          : log.includes("SYS")
+                          : (log || "").includes("SYS")
                             ? "text-neutral-500"
                             : "text-neutral-300"
                       }
@@ -1784,51 +1145,101 @@ export default function App() {
                   <div className="grid grid-cols-2 gap-4 font-mono text-[10px] bg-black p-3 rounded border border-neutral-950">
                     <div className="space-y-1">
                       <span className="text-neutral-500 block">
-                        DEPLOYMENT IP
+                        PROJECT ROLE
                       </span>
-                      <span className="text-emerald-400 block">
-                        10.0.32.254
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <span className="text-neutral-500 block">
-                        DURABILITY ENGINE
-                      </span>
-                      <span className="text-white block">
-                        Postgres / Drizzle
+                      <span className="text-emerald-400 block font-semibold">
+                        {currentProject.specs.roles}
                       </span>
                     </div>
                     <div className="space-y-1">
                       <span className="text-neutral-500 block">
-                        CPU THREAD LOAD
-                      </span>
-                      <span className="text-white block animate-pulse">
-                        0.02% VIRTUAL
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <span className="text-neutral-500 block">
-                        CONNECTION FLOW
+                        SYSTEM FOCUS
                       </span>
                       <span className="text-white block truncate">
-                        Secure WebSockets
+                        {currentProject.specs.focus}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-neutral-500 block">
+                        ENVIRONMENT STATUS
+                      </span>
+                      <span className="text-cyan-400 block animate-pulse font-semibold">
+                        {currentProject.specs.status}
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-neutral-500 block">
+                        CORE STACK
+                      </span>
+                      <span className="text-white block truncate">
+                        {currentProject.techStack.slice(0, 3).join(", ")}
                       </span>
                     </div>
                   </div>
                 </motion.div>
               )}
 
-              {/* Dismiss controls */}
-              <div className="flex items-center gap-3">
+              {/* Dismiss controls & GitHub action */}
+              <div className="flex flex-col sm:flex-row items-center gap-3">
+                {(currentProject.liveUrl || currentProject.githubUrl) && (
+                  <a
+                    href={currentProject.liveUrl || currentProject.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full sm:flex-1 py-3 bg-white text-black hover:bg-neutral-200 font-mono text-[10px] font-bold tracking-[0.25em] uppercase border border-white transition-colors cursor-pointer rounded-lg text-center flex items-center justify-center gap-2 shadow-lg"
+                  >
+                    <Globe className="w-3.5 h-3.5 text-cyan-600" />
+                    <span>LAUNCH LIVE DEMO / REPO</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </a>
+                )}
+                <button
+                  onClick={() => {
+                    setDemoActive(false);
+                    setActiveSimulatorProject(currentProject);
+                  }}
+                  className="w-full sm:flex-1 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-mono text-[10px] font-bold tracking-[0.25em] uppercase transition-colors cursor-pointer rounded-lg flex items-center justify-center gap-2 shadow-lg"
+                >
+                  <Zap className="w-3.5 h-3.5 fill-black" />
+                  <span>OPEN INTERACTIVE LIVE APP</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setDemoActive(false);
+                    setView("detail");
+                  }}
+                  className="w-full sm:flex-1 py-3 bg-cyan-950/60 hover:bg-cyan-900 border border-cyan-500/40 text-cyan-300 font-mono text-[10px] font-bold tracking-[0.25em] uppercase transition-colors cursor-pointer rounded-lg flex items-center justify-center gap-2"
+                >
+                  <span>VIEW DECK</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
                 <button
                   onClick={() => setDemoActive(false)}
-                  className="flex-1 py-3 bg-neutral-900 hover:bg-white hover:text-black font-mono text-[10px] font-bold tracking-[0.25em] uppercase border border-neutral-800 transition-colors cursor-pointer rounded-lg"
+                  className="w-full sm:w-auto px-4 py-3 bg-neutral-900 hover:bg-red-500/20 hover:text-red-400 font-mono text-[10px] font-bold tracking-[0.25em] uppercase border border-neutral-800 transition-colors cursor-pointer rounded-lg"
                 >
-                  DISCONNECT SANDBOX
+                  CLOSE
                 </button>
               </div>
             </motion.div>
           </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ================= MODAL: RESUME & ACADEMIC SECTIONS ================= */}
+      <ResumeSections
+        activeSection={activeResumeSection}
+        onClose={() => setActiveResumeSection(null)}
+        activeColor={activeColor}
+      />
+
+      {/* ================= MODAL: FULL INTERACTIVE LIVE APP SIMULATOR ================= */}
+      <AnimatePresence>
+        {activeSimulatorProject && (
+          <LiveAppSimulator
+            project={activeSimulatorProject}
+            onClose={() => setActiveSimulatorProject(null)}
+            activeColor={activeColor}
+          />
         )}
       </AnimatePresence>
     </div>

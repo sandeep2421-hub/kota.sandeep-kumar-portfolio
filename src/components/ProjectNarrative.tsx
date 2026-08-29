@@ -3,6 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { Project } from "../types";
 
 interface ProjectNarrativeProps {
+  key?: string;
   project: Project;
   onBack: () => void;
   activeColor: string;
