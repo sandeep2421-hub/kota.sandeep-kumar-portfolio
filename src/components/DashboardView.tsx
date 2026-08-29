@@ -20,6 +20,8 @@ import {
   Terminal,
   ArrowUpRight,
   Globe,
+  FileText,
+  Download,
 } from "lucide-react";
 import {
   PERSONAL_INFO,
@@ -128,11 +130,20 @@ export default function DashboardView({
           >
             CERTS
           </button>
+          <a
+            href="resume.pdf"
+            target="_blank"
+            rel="noreferrer"
+            className="px-3 py-1 rounded bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-colors cursor-pointer flex items-center gap-1 shadow"
+          >
+            <FileText className="w-3.5 h-3.5 fill-black" />
+            <span>RESUME PDF</span>
+          </a>
           <button
             onClick={() => scrollToSection("contact")}
             className="px-3 py-1 rounded bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-colors cursor-pointer"
           >
-            CONTACT & RESUME
+            CONTACT & PROFILE
           </button>
         </nav>
 
@@ -226,10 +237,22 @@ export default function DashboardView({
             {/* Quick Action Badges */}
             <div className="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs">
               <a
+                href="resume.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-black font-bold uppercase transition-all cursor-pointer shadow-xl hover:scale-105"
+                style={{ backgroundColor: activeColor }}
+              >
+                <FileText className="w-4 h-4 fill-black" />
+                <span>DOWNLOAD RESUME (PDF)</span>
+                <Download className="w-3.5 h-3.5" />
+              </a>
+
+              <a
                 href={PERSONAL_INFO.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
               >
                 <Github className="w-4 h-4" />
                 <span>GITHUB REPO</span>
@@ -240,7 +263,7 @@ export default function DashboardView({
                 href={PERSONAL_INFO.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer"
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer"
               >
                 <Linkedin className="w-4 h-4 text-blue-400" />
                 <span>LINKEDIN</span>
@@ -825,6 +848,25 @@ export default function DashboardView({
                   <span className="font-bold text-white text-xs block mt-0.5">sandeep2421-hub</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
+              </div>
+            </a>
+
+            <a
+              href="resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="p-4 rounded-xl border border-emerald-500/40 bg-emerald-950/20 hover:bg-emerald-950/40 hover:border-emerald-400 flex flex-col justify-between space-y-3 text-neutral-300 hover:text-white transition-all cursor-pointer sm:col-span-2 shadow-lg"
+            >
+              <div className="flex items-center justify-between">
+                <FileText className="w-5 h-5 text-emerald-400 fill-emerald-400/20" />
+                <Download className="w-4 h-4 text-emerald-400" />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-emerald-400 font-bold uppercase block">OFFICIAL DOCUMENT</span>
+                  <span className="font-bold text-white text-sm block mt-0.5">DOWNLOAD KOTA SANDEEP KUMAR RESUME (PDF)</span>
+                </div>
+                <ArrowUpRight className="w-4 h-4 text-emerald-400" />
               </div>
             </a>
           </div>
