@@ -14,7 +14,6 @@ import {
   MapPin,
   ChevronRight,
   ChevronLeft,
-  Settings,
   Zap,
   ArrowUpRight,
   Globe,
@@ -24,6 +23,10 @@ import {
   Activity,
   Cpu,
   ShieldCheck,
+  Terminal,
+  Database,
+  Cloud,
+  BookMarked,
 } from "lucide-react";
 import {
   PERSONAL_INFO,
@@ -146,18 +149,7 @@ export default function DashboardView({
           >
             Contact
           </button>
-        </nav>
-
-        {/* Quick Theme Controls */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowConfig(!showConfig)}
-            className="p-2 rounded-lg border border-neutral-800 hover:border-neutral-600 text-neutral-400 hover:text-white transition-all cursor-pointer bg-neutral-950"
-            title="System Palette Config"
-          >
-            <Settings className="w-4 h-4" style={{ color: showConfig ? activeColor : undefined }} />
-          </button>
-        </div>
+      </nav>
       </header>
 
       {/* SECTION: HERO / 5-SECOND DELOITTE RECRUITER SPOTLIGHT */}
@@ -253,7 +245,11 @@ export default function DashboardView({
           </div>
 
           {/* Right Highlights Bento Card */}
-          <div className="lg:col-span-5 space-y-4 bg-neutral-950/80 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md">
+          <div className="lg:col-span-5 space-y-4 bg-neutral-950/80 border border-neutral-800 rounded-2xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden"
+            style={{ boxShadow: `0 0 40px -10px ${activeColor}22` }}>
+            {/* Accent corner glow */}
+            <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] pointer-events-none"
+              style={{ background: `${activeColor}15` }} />
             <div className="flex items-center justify-between border-b border-neutral-900 pb-3">
               <span className="font-mono text-xs font-bold uppercase text-neutral-300 tracking-wider flex items-center gap-2">
                 <Code2 className="w-4 h-4 text-cyan-400" />
@@ -415,7 +411,7 @@ export default function DashboardView({
           <div>
             <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
               <Code2 className="w-4 h-4" />
-              <span>02 // Systems & Software Engineering (30-Second Test)</span>
+              <span>02 // Engineering Projects</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
               Featured Projects & Case Studies
@@ -444,7 +440,13 @@ export default function DashboardView({
         </div>
 
         {/* Selected Project Main Showcase Deck */}
-        <div className="bg-neutral-950/90 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden space-y-8">
+        <div
+          className="bg-neutral-950/90 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden space-y-8"
+          style={{ boxShadow: `0 0 50px -15px ${activeColor}20, inset 1px 0 0 0 ${activeColor}30` }}
+        >
+          {/* Top-left accent line */}
+          <div className="absolute top-0 left-0 w-1 h-24 rounded-r-full opacity-60"
+            style={{ background: `linear-gradient(to bottom, ${activeColor}, transparent)` }} />
           {/* Header row */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-neutral-900 pb-6">
             <div className="space-y-2">
@@ -505,14 +507,14 @@ export default function DashboardView({
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-cyan-500/50 bg-neutral-900 text-neutral-200 hover:text-white transition-all cursor-pointer"
               >
                 <Zap className="w-4 h-4 text-cyan-400" />
-                <span>Interactive Simulation</span>
+                <span>Interactive Demo</span>
               </button>
 
               <button
                 onClick={onOpenDetail}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-neutral-600 bg-neutral-950 text-neutral-400 hover:text-white transition-all cursor-pointer"
               >
-                <span>Full Spec Sheet</span>
+                <span>Technical Details</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             </div>
@@ -666,6 +668,15 @@ export default function DashboardView({
               ))}
             </div>
           </div>
+
+          {/* Demo disclaimer */}
+          <div className="flex items-start gap-2.5 p-3 rounded-lg bg-neutral-900/60 border border-neutral-800 font-mono text-xs text-neutral-400">
+            <Zap className="w-3.5 h-3.5 text-cyan-400/70 flex-shrink-0 mt-0.5" />
+            <span>
+              <span className="text-neutral-200 font-semibold">Interactive Demo</span>
+              {" "}— illustrative simulation of the project's workflow. Not connected to the production backend or ML model.
+            </span>
+          </div>
         </div>
       </section>
 
@@ -682,13 +693,22 @@ export default function DashboardView({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {TECHNICAL_SKILLS.map((cat, idx) => (
+          {TECHNICAL_SKILLS.map((cat, idx) => {
+            const categoryIcons: Record<string, React.ReactNode> = {
+              "Languages": <Terminal className="w-4 h-4" />,
+              "Frameworks & Libraries": <Layers className="w-4 h-4" />,
+              "Databases": <Database className="w-4 h-4" />,
+              "Cloud & Tools": <Cloud className="w-4 h-4" />,
+              "Relevant Coursework": <BookMarked className="w-4 h-4" />,
+            };
+            const icon = categoryIcons[cat.category] || <Code2 className="w-4 h-4" />;
+            return (
             <div
               key={idx}
               className="p-6 rounded-2xl border border-neutral-900 bg-neutral-950/80 space-y-4 backdrop-blur-md hover:border-neutral-800 transition-colors"
             >
               <h3 className="font-mono text-xs uppercase tracking-widest font-bold text-cyan-400 border-b border-neutral-900 pb-2 flex items-center gap-2">
-                <Code2 className="w-4 h-4" />
+                {icon}
                 <span>{cat.category}</span>
               </h3>
               <div className="flex flex-wrap gap-2 pt-1">
@@ -702,7 +722,8 @@ export default function DashboardView({
                 ))}
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -807,10 +828,10 @@ export default function DashboardView({
         <div className="border-b border-neutral-900 pb-4">
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
             <Mail className="w-4 h-4" />
-            <span>06 // Connect & Hire</span>
+            <span>06 // Contact</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            Contact & Recruiter Dock
+            Get in Touch
           </h2>
         </div>
 

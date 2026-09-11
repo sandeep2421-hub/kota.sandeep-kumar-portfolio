@@ -94,7 +94,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     iconType: "database",
     githubUrl: "https://github.com/sandeep2421-hub/dsa-project-hospital-website",
     caseStudy: {
-      problem: "Traditional synchronous healthcare management portals suffer database thread blocks and high latency during peak hours when handling concurrent patient registrations, medical appointments, and medical history lookups.",
+      problem: "Healthcare management portals often rely on synchronous blocking database calls, which limits their ability to handle concurrent patient registrations, appointment scheduling, and medical record lookups without degrading responsiveness.",
       architecture: [
         "React Component-Driven Single Page Frontend with Tailwind CSS",
         "Python FastAPI Backend Powered by Uvicorn ASGI Server",
