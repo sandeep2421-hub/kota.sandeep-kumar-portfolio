@@ -5,6 +5,14 @@ export interface ProjectSpecs {
   focus: string;
 }
 
+export interface ProjectCaseStudy {
+  problem: string;
+  architecture: string[];
+  challenge: string;
+  impact: string;
+  metrics: { label: string; value: string; sub?: string }[];
+}
+
 export interface Project {
   id: string;          // e.g. "PR-01: FUSIONFLOW AI"
   title: string;       // e.g. "FusionFlowAI"
@@ -18,6 +26,7 @@ export interface Project {
   iconType: "helix" | "chat" | "database" | "audio" | "vision";
   githubUrl?: string;
   liveUrl?: string;
+  caseStudy?: ProjectCaseStudy;
 }
 
 export interface EducationItem {

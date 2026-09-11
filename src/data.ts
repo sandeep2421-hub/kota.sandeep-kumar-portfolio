@@ -45,7 +45,24 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     glowGradient: "from-cyan-500/20 to-blue-600/5",
     iconType: "helix",
     githubUrl: "https://github.com/sandeep2421-hub/FusionFlowAI",
-    liveUrl: "https://github.com/sandeep2421-hub/FusionFlowAI",
+    caseStudy: {
+      problem: "Silk Board Junction in Bengaluru suffers from extreme vehicular bottlenecks. Traditional static historical models fail to predict congestion spikes when rainfall or extreme weather conditions disrupt normal traffic flows.",
+      architecture: [
+        "Live Weather Telemetry (OpenWeather API) + Historical Traffic Baseline Dataset",
+        "Data Fusion & Feature Engineering Pipeline (fusing precipitation, humidity, temperature)",
+        "Dual XGBoost Regressor (Historic Baseline Model vs Weather-Fused Prediction Model)",
+        "Asynchronous FastAPI Backend Deployed on Render",
+        "Next.js Dashboard with Recharts & Hour-by-Hour Congestion Heatmaps"
+      ],
+      challenge: "Aligning asynchronous real-time weather streams with variable traffic volume data while preventing feature leakage and avoiding server inference delays.",
+      impact: "Achieved an empirical 10–20% accuracy improvement over static baselines across RMSE, R², MAE, and MAPE metrics. Co-authored and submitted to IEEE INDICON 2026 (Paper ID: 2468).",
+      metrics: [
+        { label: "Accuracy Gain", value: "10–20%", sub: "Over static baselines" },
+        { label: "Validation", value: "RMSE & R²", sub: "Empirical metrics" },
+        { label: "Architecture", value: "2-Stage ML", sub: "Weather-fused XGBoost" },
+        { label: "Forecast Horizon", value: "24 Hours", sub: "Hour-by-hour predictions" }
+      ]
+    }
   },
   {
     id: "PR-02: STUDY AI",
@@ -71,14 +88,32 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     specs: {
       skills: "Electron • Express • Gemini API",
       roles: "Desktop & Backend Architect",
-      status: "Deployed / Serverless •",
+      status: "Deployed Serverless API",
       focus: "Screen Capture & AI Pipeline",
     },
     themeColor: "#00ff66", // neon green
     glowGradient: "from-emerald-500/20 to-teal-600/5",
     iconType: "chat",
-    githubUrl: "https://github.com/sandeep2421-hub/Study-AI-Assistant",
-    liveUrl: "https://github.com/sandeep2421-hub/Study-AI-Assistant",
+    githubUrl: "https://github.com/sandeep2421-hub/study-ai-assistant",
+    liveUrl: "https://study-ai-assistant-tawny.vercel.app",
+    caseStudy: {
+      problem: "Raw desktop screen captures generate large file payloads (8MB+) that exceed serverless cloud limits (Vercel's 4.5MB ceiling) and result in slow multi-second network roundtrips, while high LLM request volume triggers quota rate-limits.",
+      architecture: [
+        "Electron & Node.js Native Desktop Client with Global Hotkey Listeners",
+        "Client-Side Canvas Image Resizing (to 1280px) & Optimized JPEG Compression",
+        "Stateless Serverless Express Backend on Vercel with Sub-Second Routing",
+        "Firebase Firestore for Secure Hardware ID (HWID) Tracking & Authentication",
+        "Dynamic Pool Load Balancer Cycling Multiple Gemini API Keys"
+      ],
+      challenge: "Compressing high-resolution screen regions by over 95% without degrading text and code readability required by Gemini vision models for accurate OCR extraction.",
+      impact: "Compressed request payloads from 8MB+ down to <70KB (95%+ reduction), eliminating serverless payload errors and providing fast, dependable AI assistance.",
+      metrics: [
+        { label: "Payload Reduction", value: "95%+", sub: "8MB down to <70KB" },
+        { label: "Client Preprocessing", value: "1280px", sub: "Canvas JPEG pipeline" },
+        { label: "Backend Deployment", value: "Serverless", sub: "Vercel Express API" },
+        { label: "Quota Reliability", value: "Zero Blocks", sub: "Multi-key pool rotation" }
+      ]
+    }
   },
   {
     id: "PR-03: HOSPITAL SYSTEM",
@@ -102,18 +137,34 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     specs: {
       skills: "React • FastAPI • MongoDB",
       roles: "Full-Stack Developer",
-      status: "Active Architecture •",
+      status: "Active Architecture",
       focus: "Non-Blocking Async Web",
     },
     themeColor: "#ff9900", // neon amber
     glowGradient: "from-amber-500/20 to-orange-600/5",
     iconType: "database",
-    githubUrl: "https://github.com/sandeep2421-hub/Hospital-Management-System",
-    liveUrl: "https://github.com/sandeep2421-hub/Hospital-Management-System",
+    githubUrl: "https://github.com/sandeep2421-hub/dsa-project-hospital-website",
+    caseStudy: {
+      problem: "Traditional synchronous healthcare management portals suffer database thread blocks and high latency during peak hours when handling concurrent patient registrations, medical appointments, and medical history lookups.",
+      architecture: [
+        "React Component-Driven Single Page Frontend with Tailwind CSS",
+        "Python FastAPI Backend Powered by Uvicorn ASGI Server",
+        "Motor Asynchronous MongoDB Driver for Non-Blocking Database I/O",
+        "Stateless JWT Authentication and Role-Based Access Control (Admin/Doctor/Patient)"
+      ],
+      challenge: "Designing an asynchronous document schema that maintains record integrity across doctors, departments, and admitted patients without query race conditions.",
+      impact: "Constructed an end-to-end non-blocking async architecture delivering fast database response times for hospital administrative workflows.",
+      metrics: [
+        { label: "Web Framework", value: "FastAPI", sub: "High-throughput ASGI" },
+        { label: "Async Database", value: "Motor", sub: "Non-blocking MongoDB" },
+        { label: "Security", value: "JWT Auth", sub: "Role-based authorization" },
+        { label: "Repository", value: "Verified", sub: "Clean modular code" }
+      ]
+    }
   },
   {
     id: "PR-04: UNISPHERE",
-    title: "Unisphere",
+    title: "UniSphere",
     subtitle: "Student Collaborative Knowledge Hub",
     description:
       "Real-time student portal for doubt clarification, knowledge sharing, and event management.",
@@ -126,41 +177,30 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     specs: {
       skills: "React.js • Node.js • Web API",
       roles: "Full-Stack Engineer",
-      status: "Live Campus Platform •",
+      status: "Verified Repository",
       focus: "Knowledge Sharing Forums",
     },
     themeColor: "#ff0066", // neon crimson
     glowGradient: "from-rose-500/20 to-purple-600/5",
     iconType: "audio",
-    githubUrl: "https://github.com/sandeep2421-hub/Unisphere",
-    liveUrl: "https://github.com/sandeep2421-hub/Unisphere",
-  },
-  {
-    id: "PR-05: CRYPTO MANAGER",
-    title: "Crypto System",
-    subtitle: "Cryptocurrency Transaction Engine",
-    description:
-      "Web-based transaction simulator with C# ASP backend & cryptographic validation.",
-    fullDescription: [
-      "Developed a web-based system to simulate and manage cryptocurrency transactions securely.",
-      "Implemented backend logic using C# and ASP for transaction processing, validation, and data handling.",
-      "Designed interactive frontend components in JavaScript for a seamless user experience.",
-      "Integrated database functionality for storing transaction records and ensuring data consistency.",
-      "Applied basic cryptographic concepts to enhance data integrity and transaction security.",
-    ],
-    techStack: ["JavaScript", "C#", "ASP", "Database Systems"],
-    specs: {
-      skills: "C# • ASP • Cryptography",
-      roles: "Systems Programmer",
-      status: "Validated Prototype •",
-      focus: "Transaction Security",
-    },
-    themeColor: "#9d4edd", // neon violet
-    glowGradient: "from-purple-500/20 to-indigo-600/5",
-    iconType: "vision",
-    githubUrl: "https://github.com/sandeep2421-hub/Crypto-Transaction-System",
-    liveUrl: "https://github.com/sandeep2421-hub/Crypto-Transaction-System",
-  },
+    githubUrl: "https://github.com/sandeep2421-hub/UniSphere",
+    caseStudy: {
+      problem: "College students often face fragmented channels for academic discussion, doubt solving, and club event announcements across campus.",
+      architecture: [
+        "React.js Frontend UI with Modular Forum Component Trees",
+        "Node.js & Express RESTful API Endpoints",
+        "Categorized Data Storage for Question Threads and Campus Events",
+        "Responsive Client Layouts Built for Desktop and Mobile Browsers"
+      ],
+      challenge: "Structuring thread nesting and category filtering so students can quickly discover discussions relevant to specific academic modules.",
+      impact: "Developed a functional peer-to-peer campus platform promoting active academic collaboration and event discovery.",
+      metrics: [
+        { label: "Platform", value: "Full-Stack", sub: "React & Node.js" },
+        { label: "Domain", value: "EdTech", sub: "Campus collaboration" },
+        { label: "API Design", value: "RESTful", sub: "Clean endpoint schema" }
+      ]
+    }
+  }
 ];
 
 export const EDUCATION_DATA: EducationItem[] = [

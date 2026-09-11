@@ -53,7 +53,7 @@ function getYouTubeId(url?: string | null): string | null {
 }
 
 export default function App() {
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [view, setView] = useState<'main' | 'detail' | 'narrative'>('main');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [overclock, setOverclock] = useState(false);
@@ -63,17 +63,17 @@ export default function App() {
   const [activeSimulatorProject, setActiveSimulatorProject] = useState<Project | null>(null);
 
   // Custom config states selectable in settings
-  const [scanlines, setScanlines] = useState(true);
-  const [gridOpacity, setGridOpacity] = useState(20); // 10% - 40%
+  const [scanlines, setScanlines] = useState(false);
+  const [gridOpacity, setGridOpacity] = useState(15); // subtle grid
   const [customColor, setCustomColor] = useState<string | null>(null);
 
   // Video Background States with localStorage fallback
   const [enableVideoBackground, setEnableVideoBackground] = useState(() => {
     try {
       const saved = localStorage.getItem("enable_video_bg");
-      return saved !== null ? saved === "true" : true;
+      return saved !== null ? saved === "true" : false;
     } catch {
-      return true;
+      return false;
     }
   });
   const [videoUrl, setVideoUrl] = useState<string>(() => {
@@ -235,33 +235,20 @@ export default function App() {
       </AnimatePresence>
       <div
         id="root-container"
-      className="min-h-screen bg-[#000000] text-white select-none overflow-x-hidden font-sans relative flex flex-col justify-between p-6 md:p-12 xl:p-16"
-      style={{
-        cursor: "crosshair",
-        backgroundImage: `linear-gradient(rgba(255, 255, 255, ${gridOpacity / 1000}) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, ${gridOpacity / 1000}) 1px, transparent 1px)`,
-        backgroundSize: "32px 32px",
-      }}
-    >
-      {/* Immersive Scanlines Overlay if enabled */}
-      {scanlines && (
-        <div
-          id="crt-scanlines"
-          className="pointer-events-none fixed inset-0 z-55 opacity-[0.06] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,6px_100%]"
-        />
-      )}
-
-      {/* Cyber Overclock Grid Border Flash */}
-      <AnimatePresence>
-        {overclock && (
-          <motion.div
-            id="overclock-grid"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.15 }}
-            exit={{ opacity: 0 }}
-            className="pointer-events-none absolute inset-0 border-[6px] border-red-600/30 z-40 bg-red-950/[0.03]"
+        className="min-h-screen bg-[#050508] text-white select-text overflow-x-hidden font-sans relative flex flex-col justify-between p-6 md:p-12 xl:p-16"
+        style={{
+          cursor: "default",
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, ${gridOpacity / 1000}) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, ${gridOpacity / 1000}) 1px, transparent 1px)`,
+          backgroundSize: "32px 32px",
+        }}
+      >
+        {/* Subtle Scanlines Overlay if enabled */}
+        {scanlines && (
+          <div
+            id="crt-scanlines"
+            className="pointer-events-none fixed inset-0 z-55 opacity-[0.03] bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[size:100%_4px,6px_100%]"
           />
         )}
-      </AnimatePresence>
 
       {/* BACKGROUND VIDEO LOOP */}
       {enableVideoBackground && (

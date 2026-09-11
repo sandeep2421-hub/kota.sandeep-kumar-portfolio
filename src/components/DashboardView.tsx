@@ -15,13 +15,15 @@ import {
   ChevronRight,
   ChevronLeft,
   Settings,
-  Scan,
   Zap,
-  Terminal,
   ArrowUpRight,
   Globe,
   FileText,
   Download,
+  Layers,
+  Activity,
+  Cpu,
+  ShieldCheck,
 } from "lucide-react";
 import {
   PERSONAL_INFO,
@@ -66,6 +68,7 @@ export default function DashboardView({
 }: DashboardViewProps) {
   const safeIndex = Math.max(0, Math.min(currentIndex || 0, PORTFOLIO_PROJECTS.length - 1));
   const currentProject: Project = PORTFOLIO_PROJECTS[safeIndex] || PORTFOLIO_PROJECTS[0];
+  const [activeCaseStudyTab, setActiveCaseStudyTab] = useState<"overview" | "architecture" | "challenge">("overview");
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -75,176 +78,124 @@ export default function DashboardView({
   };
 
   return (
-    <div className="w-full flex flex-col space-y-16 lg:space-y-24 z-10 relative">
+    <div className="w-full flex flex-col space-y-16 lg:space-y-24 z-10 relative select-text">
       {/* STICKY DASHBOARD HEADER NAV */}
       <header
         id="dashboard-sticky-nav"
-        className="sticky top-0 z-30 w-full bg-black/80 backdrop-blur-xl border-b border-neutral-900/80 py-3.5 px-4 sm:px-8 flex flex-wrap items-center justify-between gap-4 -mx-6 md:-mx-12 xl:-mx-16"
+        className="sticky top-0 z-30 w-full bg-black/90 backdrop-blur-xl border-b border-neutral-900 py-3.5 px-4 sm:px-8 flex flex-wrap items-center justify-between gap-4 -mx-6 md:-mx-12 xl:-mx-16"
       >
-        {/* SYS Indicator */}
+        {/* Candidate Status Indicator */}
         <div className="flex items-center gap-3">
-          <div
-            className="w-2.5 h-2.5 rounded-full animate-pulse transition-all duration-300"
-            style={{ backgroundColor: activeColor }}
-          />
-          <span className="font-mono text-[10px] tracking-[0.2em] text-neutral-400 uppercase font-bold">
-            {overclock ? "OVERCLOCK ENGAGED" : "SYS CORE ACTIVE"}
+          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="font-mono text-xs text-neutral-300 uppercase font-bold tracking-wider">
+            KOTA SANDEEP KUMAR <span className="text-neutral-500 hidden sm:inline">| VIT CSE '27</span>
           </span>
         </div>
 
-        {/* Scroll Nav Anchors */}
-        <nav className="flex flex-wrap items-center gap-4 sm:gap-6 font-mono text-[11px]">
+        {/* Navigation Anchors */}
+        <nav className="flex flex-wrap items-center gap-3 sm:gap-6 font-mono text-xs">
           <button
             onClick={() => scrollToSection("hero")}
             className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
           >
-            HOME
+            Overview
+          </button>
+          <button
+            onClick={() => scrollToSection("research")}
+            className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer font-medium uppercase flex items-center gap-1"
+          >
+            <BookOpen className="w-3.5 h-3.5" />
+            <span>IEEE Research</span>
           </button>
           <button
             onClick={() => scrollToSection("projects")}
             className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
           >
-            PROJECTS
+            Projects
           </button>
           <button
             onClick={() => scrollToSection("skills")}
             className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
           >
-            SKILLS
-          </button>
-          <button
-            onClick={() => scrollToSection("research")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            RESEARCH
+            Skills
           </button>
           <button
             onClick={() => scrollToSection("education")}
             className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
           >
-            EDUCATION
+            Education
           </button>
           <button
             onClick={() => scrollToSection("certifications")}
             className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
           >
-            CERTS
+            Certs
           </button>
           <a
             href="resume.pdf"
             target="_blank"
             rel="noreferrer"
-            className="px-3 py-1 rounded bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-colors cursor-pointer flex items-center gap-1 shadow"
+            className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <FileText className="w-3.5 h-3.5 fill-black" />
-            <span>RESUME PDF</span>
+            <span>Resume PDF</span>
           </a>
           <button
             onClick={() => scrollToSection("contact")}
-            className="px-3 py-1 rounded bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-colors cursor-pointer"
+            className="px-3 py-1.5 rounded-lg bg-neutral-800 hover:bg-neutral-700 text-white font-medium uppercase transition-colors cursor-pointer"
           >
-            CONTACT & PROFILE
+            Contact
           </button>
         </nav>
 
-        {/* Quick Controls */}
+        {/* Quick Theme Controls */}
         <div className="flex items-center gap-2">
           <button
             onClick={() => setShowConfig(!showConfig)}
-            className="p-2 rounded-full border border-neutral-800 hover:border-white text-neutral-400 hover:text-white transition-all cursor-pointer bg-black/40"
-            title="System Config"
+            className="p-2 rounded-lg border border-neutral-800 hover:border-neutral-600 text-neutral-400 hover:text-white transition-all cursor-pointer bg-neutral-950"
+            title="System Palette Config"
           >
-            <Settings className="w-3.5 h-3.5" style={{ color: showConfig ? activeColor : undefined }} />
-          </button>
-          <button
-            onClick={() => {
-              setTheaterMode(!theaterMode);
-              setGridOpacity(theaterMode ? 20 : 6);
-            }}
-            className="p-2 rounded-full border border-neutral-800 hover:border-white text-neutral-400 hover:text-white transition-all cursor-pointer bg-black/40"
-            title="Theater Mode"
-          >
-            <Scan className="w-3.5 h-3.5" style={{ color: theaterMode ? activeColor : undefined }} />
-          </button>
-          <button
-            onClick={() => setOverclock(!overclock)}
-            className="p-2 rounded-full border border-neutral-800 hover:border-white transition-all cursor-pointer bg-black/40"
-            title="Overclock Mode"
-          >
-            <Zap className={`w-3.5 h-3.5 ${overclock ? "text-red-500 fill-red-500 animate-pulse" : "text-neutral-400"}`} />
+            <Settings className="w-4 h-4" style={{ color: showConfig ? activeColor : undefined }} />
           </button>
         </div>
       </header>
 
-      {/* SECTION 1: HERO / BRAND TITLE & OBJECTIVE */}
-      <section id="hero" className="w-full pt-4 space-y-8 scroll-mt-24">
+      {/* SECTION: HERO / EXECUTIVE CANDIDATE SPOTLIGHT */}
+      <section id="hero" className="w-full pt-2 space-y-8 scroll-mt-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Title Block */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="space-y-1 block select-text">
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-[3.8rem] sm:text-[5.5rem] xl:text-[6.5rem] leading-[0.9] font-black uppercase text-white font-display tracking-tighter"
-                style={{
-                  textShadow: overclock
-                    ? "3px 0px 0px rgba(255,0,0,0.5), -3px 0px 0px rgba(0,255,255,0.5)"
-                    : "none",
-                }}
-              >
-                KOTA.
-              </motion.h1>
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-[3.8rem] sm:text-[5.5rem] xl:text-[6.5rem] leading-[0.9] font-black uppercase tracking-tighter font-display text-transparent"
-                style={{
-                  WebkitTextStroke: "1.5px rgba(255, 255, 255, 0.95)",
-                }}
-              >
-                SANDEEP
-              </motion.h1>
-              <motion.h1
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-                className="text-[3.8rem] sm:text-[5.5rem] xl:text-[6.5rem] leading-[0.9] font-black uppercase text-white font-display tracking-tight"
-              >
-                KUMAR
-              </motion.h1>
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/40 border border-cyan-500/30 text-cyan-400 text-xs font-mono font-semibold">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Full-Stack & AI Software Engineer</span>
+              </div>
+              <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white font-display tracking-tight leading-[1.05]">
+                Kota Sandeep Kumar
+              </h1>
+              <p className="text-neutral-400 font-mono text-xs sm:text-sm flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-cyan-400" />
+                <span>B.Tech in Computer Science and Engineering</span>
+                <span>•</span>
+                <span>VIT Vellore (2023–2027)</span>
+              </p>
             </div>
 
-            {/* Subtitle & Role Badges */}
-            <div className="flex flex-wrap items-center gap-3">
-              <span
-                className="px-3.5 py-1 rounded text-xs font-mono font-bold uppercase tracking-wider border border-neutral-800"
-                style={{ color: activeColor, backgroundColor: `${activeColor}15` }}
-              >
-                {PERSONAL_INFO.role}
-              </span>
-              <span className="px-3.5 py-1 rounded text-xs font-mono font-medium text-neutral-300 bg-neutral-900 border border-neutral-800 flex items-center gap-1.5">
-                <GraduationCap className="w-3.5 h-3.5 text-cyan-400" />
-                {PERSONAL_INFO.college}
-              </span>
-            </div>
-
-            {/* Objective Paragraph */}
-            <p className="max-w-2xl text-neutral-300 text-sm md:text-base leading-relaxed tracking-wide font-sans select-text border-l-2 border-neutral-800 pl-4 py-1">
+            {/* Executive Statement */}
+            <p className="max-w-2xl text-neutral-300 text-sm sm:text-base leading-relaxed font-sans border-l-2 border-cyan-500/60 pl-4 py-1">
               {PERSONAL_INFO.objective}
             </p>
 
-            {/* Quick Action Badges */}
-            <div className="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs">
+            {/* Primary Action Buttons (Instant recruiter CTAs) */}
+            <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs">
               <a
                 href="resume.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-black font-bold uppercase transition-all cursor-pointer shadow-xl hover:scale-105"
-                style={{ backgroundColor: activeColor }}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/20"
               >
                 <FileText className="w-4 h-4 fill-black" />
-                <span>DOWNLOAD RESUME (PDF)</span>
+                <span>Download Resume (PDF)</span>
                 <Download className="w-3.5 h-3.5" />
               </a>
 
@@ -252,10 +203,10 @@ export default function DashboardView({
                 href={PERSONAL_INFO.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
               >
                 <Github className="w-4 h-4" />
-                <span>GITHUB REPO</span>
+                <span>GitHub Profile</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
 
@@ -263,70 +214,187 @@ export default function DashboardView({
                 href={PERSONAL_INFO.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer"
               >
                 <Linkedin className="w-4 h-4 text-blue-400" />
-                <span>LINKEDIN</span>
+                <span>LinkedIn</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
 
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white transition-all cursor-pointer"
+              <a
+                href={`mailto:${PERSONAL_INFO.email}`}
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white hover:border-cyan-500/40 transition-all cursor-pointer"
               >
                 <Mail className="w-4 h-4 text-cyan-400" />
-                <span>CONTACT ME</span>
-              </button>
+                <span>Email Me</span>
+              </a>
             </div>
           </div>
 
-          {/* Right Highlights Panel */}
+          {/* Right Highlights Bento Card */}
           <div className="lg:col-span-5 space-y-4 bg-neutral-950/80 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md">
             <div className="flex items-center justify-between border-b border-neutral-900 pb-3">
-              <span className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-widest flex items-center gap-2">
-                <Code2 className="w-4 h-4" style={{ color: activeColor }} />
-                <span>PROFILE AT A GLANCE</span>
+              <span className="font-mono text-xs font-bold uppercase text-neutral-300 tracking-wider flex items-center gap-2">
+                <Code2 className="w-4 h-4 text-cyan-400" />
+                <span>Profile Snapshot</span>
               </span>
-              <span className="font-mono text-[9px] text-emerald-400 px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/20">
-                AVAILABLE FOR ROLES
+              <span className="font-mono text-[10px] text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-semibold">
+                Available for Roles
               </span>
             </div>
 
-            <div className="space-y-4 font-mono text-xs">
-              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2">
-                <span className="text-neutral-500 uppercase">DEGREE PROGRAM</span>
-                <span className="text-white font-semibold">B.Tech CSE (2023 - 2027)</span>
+            <div className="space-y-3.5 font-mono text-xs">
+              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
+                <span className="text-neutral-500 uppercase">Degree Program</span>
+                <span className="text-white font-semibold">B.Tech CSE (2023–2027)</span>
               </div>
-              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2">
-                <span className="text-neutral-500 uppercase">ACADEMIC CGPA</span>
+              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
+                <span className="text-neutral-500 uppercase">Academic CGPA</span>
                 <span className="text-cyan-400 font-bold">7.71 / 10 (VIT Vellore)</span>
               </div>
-              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2">
-                <span className="text-neutral-500 uppercase">IEEE PUBLICATION</span>
-                <span className="text-emerald-400 font-semibold">INDICON 2026 (Paper 2468)</span>
+              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
+                <span className="text-neutral-500 uppercase">IEEE Research</span>
+                <span className="text-emerald-400 font-semibold">INDICON '26 (Paper 2468)</span>
               </div>
-              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2">
-                <span className="text-neutral-500 uppercase">CORE STACK</span>
-                <span className="text-white">React • Next • FastAPI • Python</span>
+              <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
+                <span className="text-neutral-500 uppercase">Cloud Cert</span>
+                <span className="text-amber-400 font-semibold">Oracle OCI GenAI Pro</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-neutral-500 uppercase">LOCATION</span>
-                <span className="text-neutral-300">Vellore, Tamil Nadu, India</span>
+                <span className="text-neutral-500 uppercase">Primary Stack</span>
+                <span className="text-white font-medium">FastAPI • React • Next • Python</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* SECTION 2: PROJECTS SHOWCASE DECK */}
+      {/* SECTION 1: IEEE RESEARCH PUBLICATION SPOTLIGHT (ELEVATED) */}
+      <section id="research" className="w-full space-y-6 scroll-mt-24">
+        <div className="border-b border-neutral-900 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest">
+              <BookOpen className="w-4 h-4" />
+              <span>01 // Peer-Reviewed Academic Research</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
+              IEEE Research Publication
+            </h2>
+          </div>
+          <span className="font-mono text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-lg self-start sm:self-auto">
+            Vellore Institute of Technology (VIT SCOPE)
+          </span>
+        </div>
+
+        {RESEARCH_PUBLICATIONS.map((pub, idx) => (
+          <div
+            key={idx}
+            className="p-6 sm:p-8 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 space-y-6 backdrop-blur-md relative"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-900/40 pb-4">
+              <div className="flex items-center gap-3">
+                <span className="px-3 py-1 rounded text-xs font-mono font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                  {pub.paperId}
+                </span>
+                <span className="font-mono text-xs text-neutral-300">
+                  {pub.date}
+                </span>
+              </div>
+              <span className="font-mono text-xs text-neutral-400">
+                Conference: <strong className="text-white">{pub.venue}</strong>
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-2xl sm:text-3xl font-bold font-sans text-white">
+                "{pub.title}"
+              </h3>
+              <p className="text-sm font-mono text-emerald-400 font-medium">
+                {pub.authorship}
+              </p>
+            </div>
+
+            {/* Architecture Pipeline Banner */}
+            <div className="p-4 rounded-xl bg-black/70 border border-neutral-800 font-mono text-xs space-y-3">
+              <div className="flex items-center gap-2 text-neutral-400 font-semibold text-[11px] uppercase tracking-wider">
+                <Layers className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Two-Stage Urban Traffic Data Fusion Architecture</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-center text-xs">
+                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-[10px] text-neutral-500 uppercase">Input Telemetry</p>
+                  <p className="font-bold text-white mt-1">Weather & Historical Baseline</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-[10px] text-neutral-500 uppercase">Processing Engine</p>
+                  <p className="font-bold text-cyan-400 mt-1">Data Fusion Matrix</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-[10px] text-neutral-500 uppercase">ML Model</p>
+                  <p className="font-bold text-emerald-400 mt-1">XGBoost Regressor</p>
+                </div>
+                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-[10px] text-neutral-500 uppercase">Measured Result</p>
+                  <p className="font-bold text-white mt-1">+10–20% Accuracy Gain</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Co-Authors List */}
+            <div className="p-4 rounded-xl bg-black/50 border border-neutral-900 font-mono text-xs space-y-2">
+              <p className="text-neutral-400 font-semibold">Faculty Advisors & Co-Authors:</p>
+              <div className="flex flex-wrap gap-4 text-neutral-300">
+                {pub.coAuthors.map((ca, i) => (
+                  <span key={i} className="flex items-center gap-1.5">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>{ca}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Technical Highlights */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider">
+                Key Contributions & Findings:
+              </h4>
+              <ul className="space-y-2">
+                {pub.highlights.map((h, i) => (
+                  <li key={i} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-3 font-sans leading-relaxed">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                    <span>{h}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Action button */}
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <a
+                href="https://github.com/sandeep2421-hub/FusionFlowAI"
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-mono text-xs font-bold uppercase transition-all cursor-pointer shadow-md"
+              >
+                <Github className="w-4 h-4" />
+                <span>Explore FusionFlowAI Implementation</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+        ))}
+      </section>
+
+      {/* SECTION 2: ENGINEERING PROJECTS & STRUCTURED CASE STUDIES */}
       <section id="projects" className="w-full space-y-8 scroll-mt-24">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-900 pb-4">
           <div>
             <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
-              <span>01 // FEATURED PROJECTS & SYSTEMS</span>
+              <Code2 className="w-4 h-4" />
+              <span>02 // Systems & Software Engineering</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-              ENGINEERING PORTFOLIO
+              Featured Projects & Case Studies
             </h2>
           </div>
 
@@ -336,14 +404,13 @@ export default function DashboardView({
               <button
                 key={idx}
                 onClick={() => setCurrentIndex(idx)}
-                className={`px-3 py-1.5 rounded-lg border text-xs transition-all cursor-pointer font-bold ${
+                className={`px-3.5 py-1.5 rounded-lg border text-xs transition-all cursor-pointer font-bold ${
                   idx === currentIndex
-                    ? "border-cyan-400 text-white bg-cyan-950/40"
+                    ? "border-cyan-400 text-white bg-cyan-950/40 shadow-sm"
                     : "border-neutral-800 text-neutral-400 hover:text-white bg-neutral-950"
                 }`}
                 style={{
                   borderColor: idx === currentIndex ? activeColor : undefined,
-                  boxShadow: idx === currentIndex ? `0 0 12px ${activeColor}30` : undefined,
                 }}
               >
                 {p.title}
@@ -352,10 +419,10 @@ export default function DashboardView({
           </div>
         </div>
 
-        {/* Selected Project Main Deck Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-neutral-950/90 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden">
-          {/* Left Column: Project Summary & Resume Bullets */}
-          <div className="lg:col-span-7 space-y-6">
+        {/* Selected Project Main Showcase Deck */}
+        <div className="bg-neutral-950/90 border border-neutral-900 rounded-2xl p-6 sm:p-8 backdrop-blur-md relative overflow-hidden space-y-8">
+          {/* Header row */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-neutral-900 pb-6">
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <span className="font-mono text-xs font-bold text-neutral-400 uppercase tracking-widest">
@@ -367,17 +434,13 @@ export default function DashboardView({
                 >
                   {currentProject.specs.status}
                 </span>
+                <span className="text-neutral-500 font-mono text-xs">
+                  {currentProject.specs.roles}
+                </span>
               </div>
-              <a
-                href={currentProject.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="group inline-flex items-center gap-3 text-3xl sm:text-4xl font-black font-display uppercase tracking-tight text-white hover:text-cyan-400 transition-colors cursor-pointer"
-                title="Open GitHub Repository in New Tab"
-              >
-                <span>{currentProject.title}</span>
-                <ArrowUpRight className="w-6 h-6 text-cyan-400 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-              </a>
+              <h3 className="text-3xl sm:text-4xl font-black font-display uppercase tracking-tight text-white">
+                {currentProject.title}
+              </h3>
               {currentProject.subtitle && (
                 <p className="text-base sm:text-lg font-sans text-neutral-300 font-medium">
                   {currentProject.subtitle}
@@ -385,8 +448,172 @@ export default function DashboardView({
               )}
             </div>
 
-            {/* Bullet Points */}
-            <ul className="space-y-3 pt-2">
+            {/* Project Action Links (Clean, Trustworthy, No 404s) */}
+            <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+              {currentProject.githubUrl && (
+                <a
+                  href={currentProject.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>View Verified Code</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+
+              {currentProject.liveUrl && (
+                <a
+                  href={currentProject.liveUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md"
+                >
+                  <Globe className="w-4 h-4" />
+                  <span>Live Health Endpoint</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </a>
+              )}
+
+              <button
+                onClick={() => onOpenSimulator(currentProject)}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-cyan-500/50 bg-neutral-900 text-neutral-200 hover:text-white transition-all cursor-pointer"
+              >
+                <Zap className="w-4 h-4 text-cyan-400" />
+                <span>Interactive Simulation</span>
+              </button>
+
+              <button
+                onClick={onOpenDetail}
+                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-neutral-600 bg-neutral-950 text-neutral-400 hover:text-white transition-all cursor-pointer"
+              >
+                <span>Full Spec Sheet</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* Metric Highlights Grid */}
+          {currentProject.caseStudy?.metrics && (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 font-mono">
+              {currentProject.caseStudy.metrics.map((metric, mIdx) => (
+                <div
+                  key={mIdx}
+                  className="p-4 rounded-xl border border-neutral-900 bg-black/60 space-y-1"
+                >
+                  <p className="text-[10px] uppercase text-neutral-500 tracking-wider">
+                    {metric.label}
+                  </p>
+                  <p className="text-xl sm:text-2xl font-bold text-white tracking-tight" style={{ color: activeColor }}>
+                    {metric.value}
+                  </p>
+                  {metric.sub && (
+                    <p className="text-[10px] text-neutral-400">{metric.sub}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Case Study Section Breakdown */}
+          {currentProject.caseStudy && (
+            <div className="space-y-6 pt-2">
+              <div className="flex border-b border-neutral-900 gap-4 font-mono text-xs">
+                <button
+                  onClick={() => setActiveCaseStudyTab("overview")}
+                  className={`pb-2.5 font-bold uppercase transition-colors cursor-pointer border-b-2 ${
+                    activeCaseStudyTab === "overview"
+                      ? "border-cyan-400 text-cyan-400"
+                      : "border-transparent text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  01. Problem & Impact
+                </button>
+                <button
+                  onClick={() => setActiveCaseStudyTab("architecture")}
+                  className={`pb-2.5 font-bold uppercase transition-colors cursor-pointer border-b-2 ${
+                    activeCaseStudyTab === "architecture"
+                      ? "border-cyan-400 text-cyan-400"
+                      : "border-transparent text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  02. System Architecture
+                </button>
+                <button
+                  onClick={() => setActiveCaseStudyTab("challenge")}
+                  className={`pb-2.5 font-bold uppercase transition-colors cursor-pointer border-b-2 ${
+                    activeCaseStudyTab === "challenge"
+                      ? "border-cyan-400 text-cyan-400"
+                      : "border-transparent text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  03. Technical Challenge
+                </button>
+              </div>
+
+              {activeCaseStudyTab === "overview" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-sans">
+                  <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-900 space-y-2">
+                    <h4 className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-wider">
+                      The Problem:
+                    </h4>
+                    <p className="text-sm text-neutral-300 leading-relaxed">
+                      {currentProject.caseStudy.problem}
+                    </p>
+                  </div>
+                  <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-900 space-y-2">
+                    <h4 className="font-mono text-xs font-bold uppercase text-emerald-400 tracking-wider">
+                      Measured Engineering Impact:
+                    </h4>
+                    <p className="text-sm text-neutral-300 leading-relaxed">
+                      {currentProject.caseStudy.impact}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {activeCaseStudyTab === "architecture" && (
+                <div className="p-5 rounded-xl bg-black/70 border border-neutral-900 space-y-4">
+                  <h4 className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-wider flex items-center gap-2">
+                    <Layers className="w-4 h-4 text-cyan-400" />
+                    <span>Pipeline & Component Hierarchy</span>
+                  </h4>
+                  <div className="space-y-2">
+                    {currentProject.caseStudy.architecture.map((step, sIdx) => (
+                      <div
+                        key={sIdx}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-neutral-900/70 border border-neutral-800 text-xs font-mono text-neutral-200"
+                      >
+                        <span className="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0">
+                          {sIdx + 1}
+                        </span>
+                        <span>{step}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {activeCaseStudyTab === "challenge" && (
+                <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-900 space-y-2 font-sans">
+                  <h4 className="font-mono text-xs font-bold uppercase text-amber-400 tracking-wider">
+                    Core Technical Obstacle Solved:
+                  </h4>
+                  <p className="text-sm text-neutral-300 leading-relaxed">
+                    {currentProject.caseStudy.challenge}
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Full Bullet Points from Resume */}
+          <div className="space-y-3 pt-2">
+            <h4 className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-wider">
+              Implementation Details:
+            </h4>
+            <ul className="space-y-2.5">
               {currentProject.fullDescription?.map((bullet, idx) => (
                 <li key={idx} className="flex items-start gap-3 text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
                   <span
@@ -397,159 +624,22 @@ export default function DashboardView({
                 </li>
               ))}
             </ul>
-
-            {/* Tech Stack Pills */}
-            <div className="space-y-2 pt-2">
-              <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest font-bold block">
-                TECHNOLOGY STACK
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {currentProject.techStack.map((tech, i) => (
-                  <span
-                    key={i}
-                    className="px-3 py-1 rounded text-xs font-mono bg-neutral-900 border border-neutral-800 text-neutral-200"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap items-center gap-3 pt-4 font-mono text-xs">
-              <button
-                onClick={() => onOpenSimulator(currentProject)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-lg text-black font-bold uppercase transition-all cursor-pointer shadow-lg animate-pulse"
-                style={{ backgroundColor: activeColor }}
-              >
-                <Zap className="w-4 h-4 fill-black" />
-                <span>LAUNCH LIVE INTERACTIVE APP</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </button>
-
-              {currentProject.githubUrl && (
-                <a
-                  href={currentProject.githubUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-neutral-900 text-white font-bold uppercase hover:bg-neutral-800 transition-all cursor-pointer border border-neutral-800"
-                >
-                  <Globe className="w-4 h-4 text-cyan-400" />
-                  <span>OPEN GITHUB CODE</span>
-                </a>
-              )}
-
-              <button
-                onClick={onTriggerDemo}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-cyan-500/50 bg-neutral-900 text-neutral-300 hover:text-white transition-all cursor-pointer"
-              >
-                <Terminal className="w-4 h-4 text-emerald-400" />
-                <span>TERMINAL COMPILER</span>
-              </button>
-            </div>
           </div>
 
-          {/* Right Column: Dynamic Interactive Visual Box & Specs */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-            {/* Visual Box */}
-            <div className="w-full h-48 sm:h-56 rounded-xl bg-black/80 border border-neutral-800 relative flex items-center justify-center overflow-hidden">
-              <svg className="w-full h-full p-4" viewBox="0 0 100 100">
-                <path
-                  d="M 10,0 L 10,100 M 30,0 L 30,100 M 50,0 L 50,100 M 70,0 L 70,100 M 90,0 L 90,100"
-                  stroke="#151515"
-                  strokeWidth="0.5"
-                />
-                <path
-                  d="M 0,10 L 100,10 M 0,30 L 100,30 M 0,50 L 100,50 M 0,70 L 100,70 M 0,90 L 100,90"
-                  stroke="#151515"
-                  strokeWidth="0.5"
-                />
-                {currentProject.iconType === "helix" && (
-                  <g>
-                    <path
-                      d="M 15,50 Q 35,15 50,50 T 85,50"
-                      fill="none"
-                      stroke={activeColor}
-                      strokeWidth="2.5"
-                    />
-                    <path
-                      d="M 15,50 Q 35,85 50,50 T 85,50"
-                      fill="none"
-                      stroke={`${activeColor}50`}
-                      strokeWidth="1.5"
-                    />
-                    <circle cx="50" cy="50" r="4" fill={activeColor} />
-                  </g>
-                )}
-                {currentProject.iconType === "chat" && (
-                  <g>
-                    <circle cx="50" cy="50" r="25" fill="none" stroke={activeColor} strokeWidth="1.5" />
-                    <circle cx="50" cy="50" r="10" fill={activeColor} opacity="0.4" />
-                    <rect x="42" y="42" width="16" height="16" rx="3" fill="#000" stroke={activeColor} strokeWidth="2" />
-                  </g>
-                )}
-                {currentProject.iconType === "database" && (
-                  <g transform="translate(50,50)">
-                    <polygon points="0,-25 22,-12 22,12 0,25 -22,12 -22,-12" fill="none" stroke={activeColor} strokeWidth="2" />
-                    <line x1="0" y1="0" x2="0" y2="25" stroke={activeColor} strokeWidth="1.5" />
-                  </g>
-                )}
-                {currentProject.iconType === "audio" && (
-                  <g>
-                    <circle cx="50" cy="50" r="20" fill="none" stroke={activeColor} strokeWidth="2" />
-                    <line x1="30" y1="50" x2="70" y2="50" stroke={activeColor} strokeWidth="2" />
-                  </g>
-                )}
-                {currentProject.iconType === "vision" && (
-                  <g>
-                    <line x1="10" y1="50" x2="90" y2="50" stroke={activeColor} strokeWidth="1" />
-                    <circle cx="50" cy="50" r="30" fill="none" stroke={activeColor} strokeWidth="1.5" strokeDasharray="4,4" />
-                  </g>
-                )}
-              </svg>
-            </div>
-
-            {/* Quick Specs Grid */}
-            <div className="grid grid-cols-2 gap-3 font-mono text-xs">
-              <div className="p-3 rounded-lg border border-neutral-900 bg-black/60">
-                <span className="text-neutral-500 uppercase text-[9px] block">ROLE</span>
-                <span className="text-white font-semibold truncate block mt-0.5">
-                  {currentProject.specs.roles}
+          {/* Tech Stack Pills */}
+          <div className="space-y-2 pt-2 border-t border-neutral-900">
+            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest font-bold block">
+              Technologies & Frameworks
+            </span>
+            <div className="flex flex-wrap gap-2">
+              {currentProject.techStack.map((tech, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1 rounded text-xs font-mono bg-neutral-900 border border-neutral-800 text-neutral-200"
+                >
+                  {tech}
                 </span>
-              </div>
-              <div className="p-3 rounded-lg border border-neutral-900 bg-black/60">
-                <span className="text-neutral-500 uppercase text-[9px] block">FOCUS</span>
-                <span className="text-cyan-400 font-semibold truncate block mt-0.5">
-                  {currentProject.specs.focus}
-                </span>
-              </div>
-            </div>
-
-            {/* Carousel Nav Arrows */}
-            <div className="flex items-center justify-between pt-2 border-t border-neutral-900 font-mono text-xs">
-              <button
-                onClick={() =>
-                  setCurrentIndex((prev) => (prev - 1 + PORTFOLIO_PROJECTS.length) % PORTFOLIO_PROJECTS.length)
-                }
-                className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <ChevronLeft className="w-4 h-4" />
-                <span>PREV</span>
-              </button>
-
-              <span className="text-neutral-500">
-                {currentIndex + 1} / {PORTFOLIO_PROJECTS.length}
-              </span>
-
-              <button
-                onClick={() =>
-                  setCurrentIndex((prev) => (prev + 1) % PORTFOLIO_PROJECTS.length)
-                }
-                className="flex items-center gap-1 text-neutral-400 hover:text-white transition-colors cursor-pointer"
-              >
-                <span>NEXT</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+              ))}
             </div>
           </div>
         </div>
@@ -559,10 +649,11 @@ export default function DashboardView({
       <section id="skills" className="w-full space-y-6 scroll-mt-24">
         <div className="border-b border-neutral-900 pb-4">
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
-            <span>02 // CORE COMPETENCIES & STACK</span>
+            <Code2 className="w-4 h-4" />
+            <span>03 // Core Competencies</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            TECHNICAL SKILLS MATRIX
+            Technical Skills Matrix
           </h2>
         </div>
 
@@ -591,82 +682,15 @@ export default function DashboardView({
         </div>
       </section>
 
-      {/* SECTION 4: RESEARCH & IEEE PUBLICATIONS */}
-      <section id="research" className="w-full space-y-6 scroll-mt-24">
-        <div className="border-b border-neutral-900 pb-4">
-          <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest">
-            <span>03 // ACADEMIC & FACULTY RESEARCH</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            RESEARCH & PUBLICATIONS
-          </h2>
-        </div>
-
-        {RESEARCH_PUBLICATIONS.map((pub, idx) => (
-          <div
-            key={idx}
-            className="p-6 sm:p-8 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 space-y-6 backdrop-blur-md relative"
-          >
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-900/40 pb-4">
-              <div className="flex items-center gap-3">
-                <span className="px-3 py-1 rounded text-xs font-mono font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
-                  {pub.paperId}
-                </span>
-                <span className="font-mono text-xs text-neutral-400">
-                  {pub.date}
-                </span>
-              </div>
-              <span className="font-mono text-xs text-neutral-300 font-semibold">
-                {pub.institution}
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-2xl font-bold font-sans text-white">
-                "{pub.title}"
-              </h3>
-              <p className="text-sm font-mono text-emerald-400 font-medium">
-                {pub.authorship} | {pub.venue}
-              </p>
-            </div>
-
-            <div className="p-4 rounded-xl bg-black/60 border border-neutral-900 font-mono text-xs text-neutral-400 space-y-2">
-              <p className="text-neutral-200 font-bold">Faculty Research Collaborators (VIT SCOPE):</p>
-              <div className="flex flex-wrap gap-4 text-neutral-300">
-                {pub.coAuthors.map((ca, i) => (
-                  <span key={i} className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
-                    {ca}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h4 className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider">
-                TECHNICAL METHODOLOGY & EMPIRICAL METRICS:
-              </h4>
-              <ul className="space-y-2.5">
-                {pub.highlights.map((h, i) => (
-                  <li key={i} className="text-xs sm:text-sm text-neutral-300 flex items-start gap-3 font-sans leading-relaxed">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
-      </section>
-
-      {/* SECTION 5: ACADEMIC EDUCATION */}
+      {/* SECTION 4: ACADEMIC EDUCATION */}
       <section id="education" className="w-full space-y-6 scroll-mt-24">
         <div className="border-b border-neutral-900 pb-4">
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
-            <span>04 // ACADEMIC BACKGROUND</span>
+            <GraduationCap className="w-4 h-4" />
+            <span>04 // Academic Background</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            EDUCATION & QUALIFICATIONS
+            Education & Qualifications
           </h2>
         </div>
 
@@ -712,14 +736,15 @@ export default function DashboardView({
         </div>
       </section>
 
-      {/* SECTION 6: CERTIFICATIONS GRID */}
+      {/* SECTION 5: CERTIFICATIONS */}
       <section id="certifications" className="w-full space-y-6 scroll-mt-24">
         <div className="border-b border-neutral-900 pb-4">
           <div className="flex items-center gap-2 text-amber-400 font-mono text-xs font-bold uppercase tracking-widest">
-            <span>05 // CREDENTIALS & CERTIFICATES</span>
+            <Award className="w-4 h-4" />
+            <span>05 // Industry Credentials</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            PROFESSIONAL CERTIFICATIONS
+            Professional Certifications
           </h2>
         </div>
 
@@ -744,7 +769,7 @@ export default function DashboardView({
               <div className="pt-2 border-t border-neutral-900 flex items-center justify-between text-[10px] font-mono text-neutral-400">
                 <span>{cert.issuer}</span>
                 <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <span>VERIFIED</span>
+                  <span>Verified</span>
                   <CheckCircle2 className="w-3.5 h-3.5" style={{ color: cert.badgeColor }} />
                 </span>
               </div>
@@ -753,14 +778,15 @@ export default function DashboardView({
         </div>
       </section>
 
-      {/* SECTION 7: CONTACT & FULL RESUME PROFILE FOOTER */}
-      <section id="contact" className="w-full space-y-8 scroll-mt-24 pt-8">
+      {/* SECTION 6: CONTACT & RECRUITER DOCK */}
+      <section id="contact" className="w-full space-y-8 scroll-mt-24 pt-4">
         <div className="border-b border-neutral-900 pb-4">
           <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
-            <span>06 // CONNECT & GET IN TOUCH</span>
+            <Mail className="w-4 h-4" />
+            <span>06 // Connect & Hire</span>
           </div>
           <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-            PROFILE & CONTACT DOCK
+            Contact & Recruiter Dock
           </h2>
         </div>
 
@@ -776,12 +802,12 @@ export default function DashboardView({
               </p>
               <p className="text-xs font-mono text-neutral-400 flex items-center gap-1.5 mt-2">
                 <MapPin className="w-3.5 h-3.5 text-neutral-500" />
-                {PERSONAL_INFO.college} • {PERSONAL_INFO.location}
+                <span>{PERSONAL_INFO.college} • {PERSONAL_INFO.location}</span>
               </p>
             </div>
 
             <p className="text-xs sm:text-sm text-neutral-300 font-sans leading-relaxed">
-              Interested in full-stack software development, AI integration, machine learning prediction models, or scalable backend architectures? Feel free to reach out via phone, email, or connect directly on LinkedIn/GitHub!
+              Seeking software engineering roles, full-stack development, and AI/ML system opportunities where I can apply scalable engineering, clean code, and empirical problem solving.
             </p>
 
             <div className="pt-2">
@@ -790,7 +816,7 @@ export default function DashboardView({
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white text-black font-mono text-xs font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-lg"
               >
                 <Mail className="w-4 h-4" />
-                <span>SEND DIRECT EMAIL</span>
+                <span>Send Direct Email</span>
               </a>
             </div>
           </div>
@@ -803,7 +829,7 @@ export default function DashboardView({
             >
               <Phone className="w-5 h-5 text-emerald-400" />
               <div>
-                <span className="text-[10px] text-neutral-500 uppercase block">PHONE CONTACT</span>
+                <span className="text-[10px] text-neutral-500 uppercase block">Phone Contact</span>
                 <span className="font-bold text-white text-sm block mt-0.5">+{PERSONAL_INFO.phone}</span>
               </div>
             </a>
@@ -814,7 +840,7 @@ export default function DashboardView({
             >
               <Mail className="w-5 h-5 text-cyan-400" />
               <div>
-                <span className="text-[10px] text-neutral-500 uppercase block">EMAIL ADDRESS</span>
+                <span className="text-[10px] text-neutral-500 uppercase block">Email Address</span>
                 <span className="font-bold text-white text-xs block mt-0.5 truncate">{PERSONAL_INFO.email}</span>
               </div>
             </a>
@@ -828,7 +854,7 @@ export default function DashboardView({
               <Linkedin className="w-5 h-5 text-blue-400" />
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-neutral-500 uppercase block">LINKEDIN PROFILE</span>
+                  <span className="text-[10px] text-neutral-500 uppercase block">LinkedIn Profile</span>
                   <span className="font-bold text-white text-xs block mt-0.5">kota-sandeep-kumar</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
@@ -844,7 +870,7 @@ export default function DashboardView({
               <Github className="w-5 h-5 text-purple-400" />
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-neutral-500 uppercase block">GITHUB REPOSITORY</span>
+                  <span className="text-[10px] text-neutral-500 uppercase block">GitHub Repository</span>
                   <span className="font-bold text-white text-xs block mt-0.5">sandeep2421-hub</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
@@ -863,8 +889,8 @@ export default function DashboardView({
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-emerald-400 font-bold uppercase block">OFFICIAL DOCUMENT</span>
-                  <span className="font-bold text-white text-sm block mt-0.5">DOWNLOAD KOTA SANDEEP KUMAR RESUME (PDF)</span>
+                  <span className="text-[10px] text-emerald-400 font-bold uppercase block">Official Curriculum Vitae</span>
+                  <span className="font-bold text-white text-sm block mt-0.5">Download Kota Sandeep Kumar Resume (PDF)</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-emerald-400" />
               </div>
@@ -874,8 +900,8 @@ export default function DashboardView({
 
         {/* Footer Credit */}
         <div className="pt-8 border-t border-neutral-900 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-neutral-500">
-          <span>KOTA SANDEEP KUMAR © 2026 • PORTFOLIO</span>
-          <span>BUILT WITH REACT 19 + TAILWIND + VITE</span>
+          <span>Kota Sandeep Kumar © 2026 • Portfolio</span>
+          <span>Built with React 19 + TypeScript + Tailwind CSS</span>
         </div>
       </section>
     </div>
