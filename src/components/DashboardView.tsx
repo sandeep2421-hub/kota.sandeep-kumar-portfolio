@@ -848,13 +848,13 @@ export default function DashboardView({
           {/* Right Direct Links Grid */}
           <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
             <a
-              href={`tel:${PERSONAL_INFO.phone}`}
+              href={`tel:${PERSONAL_INFO.phone.replace(/\s+/g, '')}`}
               className="p-4 rounded-xl border border-neutral-900 bg-black/60 hover:border-emerald-500 flex flex-col justify-between space-y-3 text-neutral-300 hover:text-white transition-all cursor-pointer"
             >
               <Phone className="w-5 h-5 text-emerald-400" />
               <div>
                 <span className="text-xs text-neutral-400 uppercase block">Phone Contact</span>
-                <span className="font-bold text-white text-sm block mt-0.5">+{PERSONAL_INFO.phone}</span>
+                <span className="font-bold text-white text-sm block mt-0.5">{PERSONAL_INFO.phone}</span>
               </div>
             </a>
 
@@ -879,7 +879,7 @@ export default function DashboardView({
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs text-neutral-400 uppercase block">LinkedIn Profile</span>
-                  <span className="font-bold text-white text-xs block mt-0.5">kota-sandeep-kumar</span>
+                  <span className="font-bold text-white text-xs block mt-0.5">kota-sandeep-kumar-a13b8a379</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
               </div>

@@ -9,7 +9,7 @@ import {
 
 export const PERSONAL_INFO: PersonalInfo = {
   name: "Kota Sandeep Kumar",
-  phone: "6281754852",
+  phone: "+91 6281754852",
   email: "kotasandeepkumar2006@gmail.com",
   linkedin: "https://www.linkedin.com/in/kota-sandeep-kumar-a13b8a379/",
   github: "https://github.com/sandeep2421-hub",
@@ -65,58 +65,7 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     }
   },
   {
-    id: "PR-02: STUDY AI",
-    title: "Study AI Desktop Assistant",
-    subtitle: "Command Center & Cross-Platform Engine",
-    description:
-      "Cross-platform desktop assistant with low-profile capture & API key load balancing.",
-    fullDescription: [
-      "Developed a cross-platform desktop application using Electron and Node.js for silent, low-profile screen and audio capture.",
-      "Built and deployed a stateless serverless Express backend on Vercel, integrating Firebase Firestore to manage license keys, HWID tracking, and connection logs.",
-      "Designed a high-performance image preprocessing pipeline with client-side resizing (to 1280 px) and JPEG compression, reducing request payload sizes by 95%+ (from 8 MB+ to under 70 KB) to bypass Vercel's 4.5 MB payload limit.",
-      "Implemented stateless API key load balancing across a dynamic pool of Gemini API keys to prevent rate-limiting and quota blocks.",
-      "Created global keyboard hooks for stealth overlays and automated code injection using VBScript and PowerShell scripts.",
-    ],
-    techStack: [
-      "Electron",
-      "Node.js",
-      "Express.js",
-      "Firebase Firestore",
-      "Vercel",
-      "JavaScript",
-    ],
-    specs: {
-      skills: "Electron • Express • Gemini API",
-      roles: "Desktop & Backend Architect",
-      status: "Deployed Serverless API",
-      focus: "Screen Capture & AI Pipeline",
-    },
-    themeColor: "#00ff66", // neon green
-    glowGradient: "from-emerald-500/20 to-teal-600/5",
-    iconType: "chat",
-    githubUrl: "https://github.com/sandeep2421-hub/study-ai-assistant",
-    liveUrl: "https://study-ai-assistant-tawny.vercel.app",
-    caseStudy: {
-      problem: "Raw desktop screen captures generate large file payloads (8MB+) that exceed serverless cloud limits (Vercel's 4.5MB ceiling) and result in slow multi-second network roundtrips, while high LLM request volume triggers quota rate-limits.",
-      architecture: [
-        "Electron & Node.js Native Desktop Client with Global Hotkey Listeners",
-        "Client-Side Canvas Image Resizing (to 1280px) & Optimized JPEG Compression",
-        "Stateless Serverless Express Backend on Vercel with Sub-Second Routing",
-        "Firebase Firestore for Secure Hardware ID (HWID) Tracking & Authentication",
-        "Dynamic Pool Load Balancer Cycling Multiple Gemini API Keys"
-      ],
-      challenge: "Compressing high-resolution screen regions by over 95% without degrading text and code readability required by Gemini vision models for accurate OCR extraction.",
-      impact: "Compressed request payloads from 8MB+ down to <70KB (95%+ reduction), eliminating serverless payload errors and providing fast, dependable AI assistance.",
-      metrics: [
-        { label: "Payload Reduction", value: "95%+", sub: "8MB down to <70KB" },
-        { label: "Client Preprocessing", value: "1280px", sub: "Canvas JPEG pipeline" },
-        { label: "Backend Deployment", value: "Serverless", sub: "Vercel Express API" },
-        { label: "Quota Reliability", value: "Zero Blocks", sub: "Multi-key pool rotation" }
-      ]
-    }
-  },
-  {
-    id: "PR-03: HOSPITAL SYSTEM",
+    id: "PR-02: HOSPITAL SYSTEM",
     title: "Hospital Management",
     subtitle: "Async Healthcare Management Engine",
     description:
@@ -163,41 +112,42 @@ export const PORTFOLIO_PROJECTS: Project[] = [
     }
   },
   {
-    id: "PR-04: UNISPHERE",
+    id: "PR-03: UNISPHERE",
     title: "UniSphere",
-    subtitle: "Student Collaborative Knowledge Hub",
+    subtitle: "University Management & Student Portal",
     description:
-      "Real-time student portal for doubt clarification, knowledge sharing, and event management.",
+      "Complete university management web application with student attendance, hostel, library, and campus collaboration.",
     fullDescription: [
-      "Created a collaborative platform enabling students to share knowledge, clarify doubts, and manage events online.",
-      "Built a responsive React.js frontend and integrated backend functionality using Node.js.",
-      "Implemented discussion forums, event management, and real-time interaction features.",
+      "Developed a comprehensive university management web application using React.js and RESTful architecture.",
+      "Built modules for Academic Calendars, Student Attendance Tracking, Library Management, Hostel Accommodations, and Exam Schedules.",
+      "Integrated collaborative discussion boards, event coordination, and hackathon announcement hubs for campus students.",
     ],
-    techStack: ["React.js", "JavaScript", "HTML", "CSS", "Node.js"],
+    techStack: ["React.js", "JavaScript", "HTML5", "CSS3", "Node.js", "REST APIs"],
     specs: {
-      skills: "React.js • Node.js • Web API",
+      skills: "React.js • Node.js • REST APIs",
       roles: "Full-Stack Engineer",
       status: "Verified Repository",
-      focus: "Knowledge Sharing Forums",
+      focus: "University Management & Forums",
     },
-    themeColor: "#ff0066", // neon crimson
-    glowGradient: "from-rose-500/20 to-purple-600/5",
+    themeColor: "#00ff66", // emerald/green
+    glowGradient: "from-emerald-500/20 to-teal-600/5",
     iconType: "audio",
     githubUrl: "https://github.com/sandeep2421-hub/UniSphere",
     caseStudy: {
-      problem: "College students often face fragmented channels for academic discussion, doubt solving, and club event announcements across campus.",
+      problem: "University students and administrators navigate fragmented disjointed systems for class attendance, hostel room allocations, library book checkouts, and exam notices.",
       architecture: [
-        "React.js Frontend UI with Modular Forum Component Trees",
-        "Node.js & Express RESTful API Endpoints",
-        "Categorized Data Storage for Question Threads and Campus Events",
-        "Responsive Client Layouts Built for Desktop and Mobile Browsers"
+        "React.js Single Page Application with modular portal views",
+        "Centralized Academic State Management for Attendance & Schedules",
+        "RESTful Services for Library, Hostel, and Exam queries",
+        "Interactive Campus Forum for Doubt Solving and Event Announcements"
       ],
-      challenge: "Structuring thread nesting and category filtering so students can quickly discover discussions relevant to specific academic modules.",
-      impact: "Developed a functional peer-to-peer campus platform promoting active academic collaboration and event discovery.",
+      challenge: "Coordinating multiple campus administrative modules (Hostel, Attendance, Library, Fees) into a unified, responsive client experience.",
+      impact: "Delivered a centralized campus management portal simplifying academic coordination and peer collaboration for university students.",
       metrics: [
-        { label: "Platform", value: "Full-Stack", sub: "React & Node.js" },
-        { label: "Domain", value: "EdTech", sub: "Campus collaboration" },
-        { label: "API Design", value: "RESTful", sub: "Clean endpoint schema" }
+        { label: "Architecture", value: "Modular React", sub: "Campus management" },
+        { label: "Core Modules", value: "8 Modules", sub: "Hostel, Library, Exams" },
+        { label: "Collaboration", value: "Real-Time", sub: "Campus discussion" },
+        { label: "Repository", value: "Verified", sub: "Active open source" }
       ]
     }
   }

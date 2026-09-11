@@ -79,40 +79,7 @@ export default function LiveAppSimulator({
   };
 
   // ----------------------------------------------------
-  // PR-02: Study AI Assistant Simulator States
-  // ----------------------------------------------------
-  const [captureActive, setCaptureActive] = useState(false);
-  const [apiKeyPool, setApiKeyPool] = useState([
-    { id: "GEMINI_KEY_01", load: "14%", status: "HEALTHY" },
-    { id: "GEMINI_KEY_02", load: "42%", status: "HEALTHY" },
-    { id: "GEMINI_KEY_03", load: "05%", status: "STANDBY" },
-  ]);
-  const [ocrResultText, setOcrResultText] = useState(
-    "Click 'Trigger Screen Capture' to run silent OCR and Gemini AI code explanation."
-  );
-
-  const triggerStudyCapture = () => {
-    setCaptureActive(true);
-    setOcrResultText(
-      "Capturing 1280px region... Applying JPEG compression (reduced payload to 64KB)..."
-    );
-    setTimeout(() => {
-      setOcrResultText(
-        `[OCR DETECTED CODE]\nfunction calculateXGBoostBaseline(data: Matrix) {\n  return data.map(row => row.weight * 0.92);\n}\n\n[GEMINI AI EXPLANATION]:\nThis snippet calculates a weighted feature matrix for baseline traffic prediction. Payload passed Vercel 4.5MB limit checks cleanly.`
-      );
-      setCaptureActive(false);
-      setApiKeyPool((prev) =>
-        prev.map((k, idx) =>
-          idx === 0
-            ? { ...k, load: `${Math.floor(Math.random() * 30 + 20)}%` }
-            : k
-        )
-      );
-    }, 700);
-  };
-
-  // ----------------------------------------------------
-  // PR-03: Hospital Management System States
+  // PR-02: Hospital Management System States
   // ----------------------------------------------------
   const [patients, setPatients] = useState([
     { id: "PAT-8021", name: "Rahul Verma", dept: "Cardiology", status: "Admitted", doc: "Dr. A. Sharma" },
@@ -134,7 +101,7 @@ export default function LiveAppSimulator({
   };
 
   // ----------------------------------------------------
-  // PR-04: Unisphere Forum States
+  // PR-03: Unisphere Campus Forum States
   // ----------------------------------------------------
   const [threads, setThreads] = useState([
     { id: 1, author: "Priya S.", title: "Best resources for XGBoost & Traffic ML models?", votes: 24, replies: 6, tag: "Machine Learning" },
@@ -151,29 +118,6 @@ export default function LiveAppSimulator({
       ...threads,
     ]);
     setNewPostTitle("");
-  };
-
-  // ----------------------------------------------------
-  // PR-05: Crypto Transaction Manager States
-  // ----------------------------------------------------
-  const [walletBalance, setWalletBalance] = useState(4.8521);
-  const [cryptoTxHistory, setCryptoTxHistory] = useState([
-    { txHash: "0x8f2a...91b4", amount: 0.25, coin: "ETH", status: "VALIDATED (SHA-256)", time: "2 mins ago" },
-    { txHash: "0x3c1d...4e0a", amount: 0.05, coin: "BTC", status: "VALIDATED (C# ASP)", time: "14 mins ago" },
-  ]);
-  const [sendAmount, setSendAmount] = useState("0.1");
-
-  const handleSendCrypto = () => {
-    const val = parseFloat(sendAmount);
-    if (isNaN(val) || val <= 0 || val > walletBalance) return;
-
-    setWalletBalance((prev) => Math.max(0, Math.round((prev - val) * 10000) / 10000));
-    const randomHash = `0x${Math.random().toString(16).substring(2, 6)}...${Math.random().toString(16).substring(2, 6)}`;
-    setCryptoTxHistory([
-      { txHash: randomHash, amount: val, coin: "ETH", status: "VALIDATED (SHA-256 C#)", time: "Just now" },
-      ...cryptoTxHistory,
-    ]);
-    setSendAmount("0.1");
   };
 
   const projectTargetUrl = project.liveUrl || project.githubUrl || "https://github.com/sandeep2421-hub";
@@ -515,64 +459,7 @@ export default function LiveAppSimulator({
                 </div>
               )}
 
-              {project.id.includes("PR-02") && (
-                <div className="space-y-6">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-neutral-900/60 p-4 rounded-xl border border-neutral-800">
-                    <div>
-                      <h3 className="text-xl font-bold text-white font-display uppercase tracking-wide">
-                        Study AI Desktop Screen & OCR Assistant
-                      </h3>
-                      <p className="text-xs text-neutral-400 font-mono mt-0.5">
-                        Electron & Node.js desktop assistant with Vercel serverless load balancing & Gemini AI.
-                      </p>
-                    </div>
-                    <button
-                      onClick={triggerStudyCapture}
-                      disabled={captureActive}
-                      className="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-mono text-xs font-bold uppercase tracking-widest rounded-lg flex items-center justify-center gap-2 transition-colors cursor-pointer shadow-lg shadow-emerald-500/20"
-                    >
-                      <Cpu className="w-4 h-4" />
-                      <span>{captureActive ? "CAPTURING FRAME..." : "TRIGGER SCREEN CAPTURE & AI"}</span>
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div className="lg:col-span-7 bg-black p-4 rounded-xl border border-neutral-800 font-mono space-y-4 relative overflow-hidden">
-                      <div className="flex items-center justify-between border-b border-neutral-900 pb-2 text-xs">
-                        <span className="text-emerald-400 font-bold">● VIRTUAL DESKTOP CAPTURE HUD</span>
-                        <span className="text-neutral-500">PAYLOAD COMPRESSION: 95.2%</span>
-                      </div>
-
-                      <div className="min-h-[160px] bg-neutral-950 p-4 rounded border border-neutral-900 text-xs text-neutral-300 whitespace-pre-wrap leading-relaxed">
-                        {ocrResultText}
-                      </div>
-                    </div>
-
-                    <div className="lg:col-span-5 bg-neutral-900/40 p-5 rounded-xl border border-neutral-900 space-y-4 font-mono">
-                      <div className="flex items-center gap-2 text-emerald-400 text-xs font-bold uppercase border-b border-neutral-900 pb-2">
-                        <Key className="w-4 h-4" />
-                        <span>GEMINI API KEY LOAD BALANCER</span>
-                      </div>
-
-                      <div className="space-y-2">
-                        {apiKeyPool.map((key, i) => (
-                          <div key={i} className="flex items-center justify-between bg-black/60 p-3 rounded border border-neutral-900 text-xs">
-                            <div>
-                              <span className="text-white font-bold block">{key.id}</span>
-                              <span className="text-[10px] text-neutral-500">Load: {key.load}</span>
-                            </div>
-                            <span className="px-2 py-0.5 rounded text-[10px] bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                              {key.status}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {project.id.includes("PR-03") && (
+              {(project.id.includes("PR-02") || project.title.toLowerCase().includes("hospital")) && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between bg-neutral-900/60 p-4 rounded-xl border border-neutral-800">
                     <div>
@@ -652,25 +539,25 @@ export default function LiveAppSimulator({
                 </div>
               )}
 
-              {project.id.includes("PR-04") && (
+              {(project.id.includes("PR-03") || project.title.toLowerCase().includes("unisphere")) && (
                 <div className="space-y-6">
                   <div className="flex items-center justify-between bg-neutral-900/60 p-4 rounded-xl border border-neutral-800">
                     <div>
                       <h3 className="text-xl font-bold text-white font-display uppercase tracking-wide">
-                        Unisphere Campus Discussion Forum
+                        UniSphere Campus Discussion Forum & Portal
                       </h3>
                       <p className="text-xs text-neutral-400 font-mono mt-0.5">
-                        Real-time student portal for doubt clarification & academic event collaboration.
+                        Real-time student portal for academic schedules, doubt clarification & event collaboration.
                       </p>
                     </div>
-                    <span className="px-3 py-1 bg-rose-500/10 text-rose-400 border border-rose-500/30 font-mono text-xs font-bold rounded">
-                      FORUM ONLINE
+                    <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-mono text-xs font-bold rounded">
+                      PORTAL ONLINE
                     </span>
                   </div>
 
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 font-mono">
                     <form onSubmit={handleCreatePost} className="lg:col-span-5 bg-neutral-900/40 p-5 rounded-xl border border-neutral-900 space-y-4">
-                      <div className="text-xs font-bold text-rose-400 uppercase border-b border-neutral-900 pb-2 flex items-center gap-2">
+                      <div className="text-xs font-bold text-emerald-400 uppercase border-b border-neutral-900 pb-2 flex items-center gap-2">
                         <MessageSquare className="w-4 h-4" />
                         <span>POST ACADEMIC DOUBT / QUESTION</span>
                       </div>
@@ -682,13 +569,13 @@ export default function LiveAppSimulator({
                           placeholder="e.g. How to optimize React render hooks?"
                           value={newPostTitle}
                           onChange={(e) => setNewPostTitle(e.target.value)}
-                          className="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:border-rose-400 outline-none"
+                          className="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:border-emerald-400 outline-none"
                         />
                       </div>
 
                       <button
                         type="submit"
-                        className="w-full py-2.5 bg-rose-500 hover:bg-rose-400 text-white font-bold uppercase text-xs rounded transition-colors cursor-pointer"
+                        className="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase text-xs rounded transition-colors cursor-pointer"
                       >
                         PUBLISH DISCUSSION THREAD
                       </button>
@@ -703,81 +590,12 @@ export default function LiveAppSimulator({
                           <div key={t.id} className="bg-neutral-950 p-3 rounded border border-neutral-900 space-y-1 text-xs">
                             <div className="flex items-center justify-between text-neutral-400 text-[10px]">
                               <span>{t.author}</span>
-                              <span className="text-rose-400">{t.tag}</span>
+                              <span className="text-emerald-400">{t.tag}</span>
                             </div>
                             <h4 className="text-white font-semibold">{t.title}</h4>
                             <div className="flex items-center gap-4 text-[10px] text-neutral-500 pt-1">
                               <span className="flex items-center gap-1"><ThumbsUp className="w-3 h-3 text-cyan-400" /> {t.votes} Upvotes</span>
                               <span>• {t.replies} Replies</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {project.id.includes("PR-05") && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between bg-neutral-900/60 p-4 rounded-xl border border-neutral-800">
-                    <div>
-                      <h3 className="text-xl font-bold text-white font-display uppercase tracking-wide">
-                        Cryptocurrency Transaction Manager Simulator
-                      </h3>
-                      <p className="text-xs text-neutral-400 font-mono mt-0.5">
-                        C# ASP backend transaction processor with SHA-256 cryptographic hash validation.
-                      </p>
-                    </div>
-                    <span className="px-3 py-1 bg-purple-500/10 text-purple-400 border border-purple-500/30 font-mono text-xs font-bold rounded">
-                      SHA-256 SECURED
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 font-mono">
-                    <div className="lg:col-span-5 bg-neutral-900/40 p-5 rounded-xl border border-neutral-900 space-y-4">
-                      <div className="flex justify-between items-center border-b border-neutral-900 pb-2 text-xs">
-                        <span className="text-purple-400 font-bold uppercase flex items-center gap-2">
-                          <Wallet className="w-4 h-4" /> WALLET BALANCE
-                        </span>
-                        <span className="text-white font-bold">{walletBalance} ETH</span>
-                      </div>
-
-                      <div className="space-y-1">
-                        <label className="text-[11px] text-neutral-400 block">Amount to Transfer (ETH):</label>
-                        <input
-                          type="number"
-                          step="0.05"
-                          value={sendAmount}
-                          onChange={(e) => setSendAmount(e.target.value)}
-                          className="w-full bg-black border border-neutral-800 rounded px-3 py-2 text-xs text-white focus:border-purple-400 outline-none"
-                        />
-                      </div>
-
-                      <button
-                        onClick={handleSendCrypto}
-                        className="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold uppercase text-xs rounded transition-colors cursor-pointer"
-                      >
-                        SEND TRANSACTION & COMPUTE HASH
-                      </button>
-                    </div>
-
-                    <div className="lg:col-span-7 bg-black p-5 rounded-xl border border-neutral-800 space-y-3">
-                      <span className="text-xs font-bold text-white block border-b border-neutral-900 pb-2">
-                        VALIDATED TRANSACTION LEDGER
-                      </span>
-                      <div className="space-y-2 max-h-[220px] overflow-y-auto text-xs">
-                        {cryptoTxHistory.map((tx, idx) => (
-                          <div key={idx} className="flex items-center justify-between bg-neutral-950 p-3 rounded border border-neutral-900">
-                            <div>
-                              <span className="text-white font-bold block">{tx.amount} {tx.coin}</span>
-                              <span className="text-[10px] text-neutral-500 font-mono">Hash: {tx.txHash}</span>
-                            </div>
-                            <div className="text-right">
-                              <span className="px-2 py-0.5 rounded text-[9px] bg-purple-500/10 text-purple-400 border border-purple-500/30 block">
-                                {tx.status}
-                              </span>
-                              <span className="text-[9px] text-neutral-600 block mt-1">{tx.time}</span>
                             </div>
                           </div>
                         ))}
