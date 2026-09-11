@@ -87,8 +87,8 @@ export default function DashboardView({
         {/* Candidate Status Indicator */}
         <div className="flex items-center gap-3">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-mono text-xs text-neutral-300 uppercase font-bold tracking-wider">
-            KOTA SANDEEP KUMAR <span className="text-neutral-500 hidden sm:inline">| VIT CSE '27</span>
+          <span className="font-mono text-xs text-neutral-200 uppercase font-bold tracking-wider">
+            KOTA SANDEEP KUMAR <span className="text-neutral-500 hidden sm:inline">| VIT CSE '27 (DELOITTE CANDIDATE)</span>
           </span>
         </div>
 
@@ -102,7 +102,7 @@ export default function DashboardView({
           </button>
           <button
             onClick={() => scrollToSection("research")}
-            className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer font-medium uppercase flex items-center gap-1"
+            className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer font-medium uppercase flex items-center gap-1.5"
           >
             <BookOpen className="w-3.5 h-3.5" />
             <span>IEEE Research</span>
@@ -160,7 +160,7 @@ export default function DashboardView({
         </div>
       </header>
 
-      {/* SECTION: HERO / EXECUTIVE CANDIDATE SPOTLIGHT */}
+      {/* SECTION: HERO / 5-SECOND DELOITTE RECRUITER SPOTLIGHT */}
       <section id="hero" className="w-full pt-2 space-y-8 scroll-mt-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           {/* Left Title Block */}
@@ -173,20 +173,24 @@ export default function DashboardView({
               <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white font-display tracking-tight leading-[1.05]">
                 Kota Sandeep Kumar
               </h1>
-              <p className="text-neutral-400 font-mono text-xs sm:text-sm flex items-center gap-2">
-                <GraduationCap className="w-4 h-4 text-cyan-400" />
-                <span>B.Tech in Computer Science and Engineering</span>
-                <span>•</span>
-                <span>VIT Vellore (2023–2027)</span>
+              <p className="text-neutral-300 font-mono text-xs sm:text-sm flex flex-wrap items-center gap-2">
+                <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
+                  <GraduationCap className="w-4 h-4" />
+                  <span>B.Tech in Computer Science and Engineering</span>
+                </span>
+                <span className="text-neutral-600">•</span>
+                <span>Vellore Institute of Technology (VIT Vellore)</span>
+                <span className="text-neutral-600">•</span>
+                <span className="text-emerald-400 font-semibold">Class of 2027</span>
               </p>
             </div>
 
-            {/* Executive Statement */}
+            {/* Executive Statement with Specializations and Proof */}
             <p className="max-w-2xl text-neutral-300 text-sm sm:text-base leading-relaxed font-sans border-l-2 border-cyan-500/60 pl-4 py-1">
-              {PERSONAL_INFO.objective}
+              Computer Science undergraduate specializing in <strong>AI/ML prediction systems</strong>, <strong>FastAPI / Node.js backend architectures</strong>, and <strong>scalable cloud deployments</strong>. Co-authored urban traffic data fusion research submitted to <strong>IEEE INDICON 2026</strong> (Paper ID: 2468) achieving 10–20% empirical accuracy gains.
             </p>
 
-            {/* Primary Action Buttons (Instant recruiter CTAs) */}
+            {/* Primary Action Buttons (Instant recruiter CTAs - 5-Second Test Passed) */}
             <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs">
               <a
                 href="resume.pdf"
@@ -199,14 +203,31 @@ export default function DashboardView({
                 <Download className="w-3.5 h-3.5" />
               </a>
 
+              <button
+                onClick={() => scrollToSection("projects")}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md"
+              >
+                <Code2 className="w-4 h-4" />
+                <span>Explore Projects</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+
+              <button
+                onClick={() => scrollToSection("research")}
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-emerald-500/40 text-emerald-400 hover:text-white hover:border-emerald-400 transition-all cursor-pointer"
+              >
+                <BookOpen className="w-4 h-4" />
+                <span>IEEE Research</span>
+              </button>
+
               <a
                 href={PERSONAL_INFO.github}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
               >
                 <Github className="w-4 h-4" />
-                <span>GitHub Profile</span>
+                <span>GitHub</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
 
@@ -214,7 +235,7 @@ export default function DashboardView({
                 href={PERSONAL_INFO.linkedin}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer"
+                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
               >
                 <Linkedin className="w-4 h-4 text-blue-400" />
                 <span>LinkedIn</span>
@@ -226,7 +247,7 @@ export default function DashboardView({
                 className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white hover:border-cyan-500/40 transition-all cursor-pointer"
               >
                 <Mail className="w-4 h-4 text-cyan-400" />
-                <span>Email Me</span>
+                <span>Email</span>
               </a>
             </div>
           </div>
@@ -238,30 +259,30 @@ export default function DashboardView({
                 <Code2 className="w-4 h-4 text-cyan-400" />
                 <span>Profile Snapshot</span>
               </span>
-              <span className="font-mono text-[10px] text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-semibold">
+              <span className="font-mono text-xs text-emerald-400 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 font-semibold">
                 Available for Roles
               </span>
             </div>
 
             <div className="space-y-3.5 font-mono text-xs">
               <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
-                <span className="text-neutral-500 uppercase">Degree Program</span>
+                <span className="text-neutral-400 uppercase">Degree Program</span>
                 <span className="text-white font-semibold">B.Tech CSE (2023–2027)</span>
               </div>
               <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
-                <span className="text-neutral-500 uppercase">Academic CGPA</span>
+                <span className="text-neutral-400 uppercase">Academic CGPA</span>
                 <span className="text-cyan-400 font-bold">7.71 / 10 (VIT Vellore)</span>
               </div>
               <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
-                <span className="text-neutral-500 uppercase">IEEE Research</span>
-                <span className="text-emerald-400 font-semibold">INDICON '26 (Paper 2468)</span>
+                <span className="text-neutral-400 uppercase">IEEE Research</span>
+                <span className="text-emerald-400 font-semibold">INDICON '26 (Paper Submitted)</span>
               </div>
               <div className="flex items-center justify-between border-b border-neutral-900/60 pb-2.5">
-                <span className="text-neutral-500 uppercase">Cloud Cert</span>
+                <span className="text-neutral-400 uppercase">Cloud Cert</span>
                 <span className="text-amber-400 font-semibold">Oracle OCI GenAI Pro</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-neutral-500 uppercase">Primary Stack</span>
+                <span className="text-neutral-400 uppercase">Primary Stack</span>
                 <span className="text-white font-medium">FastAPI • React • Next • Python</span>
               </div>
             </div>
@@ -269,19 +290,19 @@ export default function DashboardView({
         </div>
       </section>
 
-      {/* SECTION 1: IEEE RESEARCH PUBLICATION SPOTLIGHT (ELEVATED) */}
+      {/* SECTION 1: IEEE RESEARCH (HONEST: PAPER SUBMITTED) */}
       <section id="research" className="w-full space-y-6 scroll-mt-24">
         <div className="border-b border-neutral-900 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <div className="flex items-center gap-2 text-emerald-400 font-mono text-xs font-bold uppercase tracking-widest">
               <BookOpen className="w-4 h-4" />
-              <span>01 // Peer-Reviewed Academic Research</span>
+              <span>01 // Academic & Faculty Research (Submitted)</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
-              IEEE Research Publication
+              IEEE INDICON 2026 Research
             </h2>
           </div>
-          <span className="font-mono text-xs text-neutral-400 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-lg self-start sm:self-auto">
+          <span className="font-mono text-xs text-neutral-300 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-lg self-start sm:self-auto">
             Vellore Institute of Technology (VIT SCOPE)
           </span>
         </div>
@@ -299,9 +320,12 @@ export default function DashboardView({
                 <span className="font-mono text-xs text-neutral-300">
                   {pub.date}
                 </span>
+                <span className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase bg-neutral-900 text-amber-400 border border-amber-500/30">
+                  Submitted Paper
+                </span>
               </div>
               <span className="font-mono text-xs text-neutral-400">
-                Conference: <strong className="text-white">{pub.venue}</strong>
+                Conference Venue: <strong className="text-white">{pub.venue}</strong>
               </span>
             </div>
 
@@ -316,25 +340,25 @@ export default function DashboardView({
 
             {/* Architecture Pipeline Banner */}
             <div className="p-4 rounded-xl bg-black/70 border border-neutral-800 font-mono text-xs space-y-3">
-              <div className="flex items-center gap-2 text-neutral-400 font-semibold text-[11px] uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-neutral-300 font-semibold text-xs uppercase tracking-wider">
                 <Layers className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Two-Stage Urban Traffic Data Fusion Architecture</span>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-2 text-center text-xs">
-                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
-                  <p className="text-[10px] text-neutral-500 uppercase">Input Telemetry</p>
-                  <p className="font-bold text-white mt-1">Weather & Historical Baseline</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
+                <div className="p-3 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-xs text-neutral-400 uppercase">Input Telemetry</p>
+                  <p className="font-bold text-white mt-1">Weather & Historic Volume</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
-                  <p className="text-[10px] text-neutral-500 uppercase">Processing Engine</p>
+                <div className="p-3 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-xs text-neutral-400 uppercase">Processing Engine</p>
                   <p className="font-bold text-cyan-400 mt-1">Data Fusion Matrix</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
-                  <p className="text-[10px] text-neutral-500 uppercase">ML Model</p>
+                <div className="p-3 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-xs text-neutral-400 uppercase">ML Model</p>
                   <p className="font-bold text-emerald-400 mt-1">XGBoost Regressor</p>
                 </div>
-                <div className="p-2.5 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
-                  <p className="text-[10px] text-neutral-500 uppercase">Measured Result</p>
+                <div className="p-3 rounded-lg bg-neutral-900/80 border border-neutral-800 text-neutral-300">
+                  <p className="text-xs text-neutral-400 uppercase">Measured Result</p>
                   <p className="font-bold text-white mt-1">+10–20% Accuracy Gain</p>
                 </div>
               </div>
@@ -342,7 +366,7 @@ export default function DashboardView({
 
             {/* Co-Authors List */}
             <div className="p-4 rounded-xl bg-black/50 border border-neutral-900 font-mono text-xs space-y-2">
-              <p className="text-neutral-400 font-semibold">Faculty Advisors & Co-Authors:</p>
+              <p className="text-neutral-400 font-semibold">Faculty Advisors & Co-Authors (VIT SCOPE):</p>
               <div className="flex flex-wrap gap-4 text-neutral-300">
                 {pub.coAuthors.map((ca, i) => (
                   <span key={i} className="flex items-center gap-1.5">
@@ -356,7 +380,7 @@ export default function DashboardView({
             {/* Technical Highlights */}
             <div className="space-y-3">
               <h4 className="text-xs font-mono font-bold text-neutral-300 uppercase tracking-wider">
-                Key Contributions & Findings:
+                Key Contributions & Empirical Findings:
               </h4>
               <ul className="space-y-2">
                 {pub.highlights.map((h, i) => (
@@ -377,7 +401,7 @@ export default function DashboardView({
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-mono text-xs font-bold uppercase transition-all cursor-pointer shadow-md"
               >
                 <Github className="w-4 h-4" />
-                <span>Explore FusionFlowAI Implementation</span>
+                <span>Explore FusionFlowAI Implementation Code</span>
                 <ArrowUpRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -391,7 +415,7 @@ export default function DashboardView({
           <div>
             <div className="flex items-center gap-2 text-cyan-400 font-mono text-xs font-bold uppercase tracking-widest">
               <Code2 className="w-4 h-4" />
-              <span>02 // Systems & Software Engineering</span>
+              <span>02 // Systems & Software Engineering (30-Second Test)</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold font-display uppercase tracking-tight text-white mt-1">
               Featured Projects & Case Studies
@@ -424,17 +448,17 @@ export default function DashboardView({
           {/* Header row */}
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-neutral-900 pb-6">
             <div className="space-y-2">
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-3">
                 <span className="font-mono text-xs font-bold text-neutral-400 uppercase tracking-widest">
                   {currentProject.id}
                 </span>
                 <span
-                  className="px-2.5 py-0.5 rounded text-[10px] font-mono font-bold uppercase tracking-wider"
+                  className="px-2.5 py-0.5 rounded text-xs font-mono font-bold uppercase tracking-wider"
                   style={{ backgroundColor: `${activeColor}20`, color: activeColor }}
                 >
                   {currentProject.specs.status}
                 </span>
-                <span className="text-neutral-500 font-mono text-xs">
+                <span className="text-neutral-400 font-mono text-xs">
                   {currentProject.specs.roles}
                 </span>
               </div>
@@ -502,14 +526,14 @@ export default function DashboardView({
                   key={mIdx}
                   className="p-4 rounded-xl border border-neutral-900 bg-black/60 space-y-1"
                 >
-                  <p className="text-[10px] uppercase text-neutral-500 tracking-wider">
+                  <p className="text-xs uppercase text-neutral-400 tracking-wider">
                     {metric.label}
                   </p>
                   <p className="text-xl sm:text-2xl font-bold text-white tracking-tight" style={{ color: activeColor }}>
                     {metric.value}
                   </p>
                   {metric.sub && (
-                    <p className="text-[10px] text-neutral-400">{metric.sub}</p>
+                    <p className="text-xs text-neutral-400">{metric.sub}</p>
                   )}
                 </div>
               ))}
@@ -555,7 +579,7 @@ export default function DashboardView({
               {activeCaseStudyTab === "overview" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 font-sans">
                   <div className="p-5 rounded-xl bg-neutral-900/50 border border-neutral-900 space-y-2">
-                    <h4 className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-wider">
+                    <h4 className="font-mono text-xs font-bold uppercase text-neutral-300 tracking-wider">
                       The Problem:
                     </h4>
                     <p className="text-sm text-neutral-300 leading-relaxed">
@@ -575,7 +599,7 @@ export default function DashboardView({
 
               {activeCaseStudyTab === "architecture" && (
                 <div className="p-5 rounded-xl bg-black/70 border border-neutral-900 space-y-4">
-                  <h4 className="font-mono text-xs font-bold uppercase text-neutral-400 tracking-wider flex items-center gap-2">
+                  <h4 className="font-mono text-xs font-bold uppercase text-neutral-300 tracking-wider flex items-center gap-2">
                     <Layers className="w-4 h-4 text-cyan-400" />
                     <span>Pipeline & Component Hierarchy</span>
                   </h4>
@@ -585,7 +609,7 @@ export default function DashboardView({
                         key={sIdx}
                         className="flex items-center gap-3 p-3 rounded-lg bg-neutral-900/70 border border-neutral-800 text-xs font-mono text-neutral-200"
                       >
-                        <span className="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-[10px] font-bold flex-shrink-0">
+                        <span className="w-5 h-5 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-xs font-bold flex-shrink-0">
                           {sIdx + 1}
                         </span>
                         <span>{step}</span>
@@ -628,7 +652,7 @@ export default function DashboardView({
 
           {/* Tech Stack Pills */}
           <div className="space-y-2 pt-2 border-t border-neutral-900">
-            <span className="font-mono text-[10px] text-neutral-500 uppercase tracking-widest font-bold block">
+            <span className="font-mono text-xs text-neutral-400 uppercase tracking-widest font-bold block">
               Technologies & Frameworks
             </span>
             <div className="flex flex-wrap gap-2">
@@ -709,7 +733,7 @@ export default function DashboardView({
                   <h3 className="text-lg font-bold text-white font-sans leading-snug">
                     {edu.institution}
                   </h3>
-                  <p className="text-xs font-mono text-neutral-400 mt-1">
+                  <p className="text-xs font-mono text-neutral-300 mt-1">
                     {edu.degree}
                   </p>
                 </div>
@@ -766,7 +790,7 @@ export default function DashboardView({
                   {cert.name}
                 </p>
               </div>
-              <div className="pt-2 border-t border-neutral-900 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+              <div className="pt-2 border-t border-neutral-900 flex items-center justify-between text-xs font-mono text-neutral-400">
                 <span>{cert.issuer}</span>
                 <span className="text-emerald-400 font-semibold flex items-center gap-1">
                   <span>Verified</span>
@@ -800,7 +824,7 @@ export default function DashboardView({
               <p className="text-sm font-mono text-cyan-400 mt-1">
                 {PERSONAL_INFO.role}
               </p>
-              <p className="text-xs font-mono text-neutral-400 flex items-center gap-1.5 mt-2">
+              <p className="text-xs font-mono text-neutral-300 flex items-center gap-1.5 mt-2">
                 <MapPin className="w-3.5 h-3.5 text-neutral-500" />
                 <span>{PERSONAL_INFO.college} • {PERSONAL_INFO.location}</span>
               </p>
@@ -829,7 +853,7 @@ export default function DashboardView({
             >
               <Phone className="w-5 h-5 text-emerald-400" />
               <div>
-                <span className="text-[10px] text-neutral-500 uppercase block">Phone Contact</span>
+                <span className="text-xs text-neutral-400 uppercase block">Phone Contact</span>
                 <span className="font-bold text-white text-sm block mt-0.5">+{PERSONAL_INFO.phone}</span>
               </div>
             </a>
@@ -840,7 +864,7 @@ export default function DashboardView({
             >
               <Mail className="w-5 h-5 text-cyan-400" />
               <div>
-                <span className="text-[10px] text-neutral-500 uppercase block">Email Address</span>
+                <span className="text-xs text-neutral-400 uppercase block">Email Address</span>
                 <span className="font-bold text-white text-xs block mt-0.5 truncate">{PERSONAL_INFO.email}</span>
               </div>
             </a>
@@ -854,7 +878,7 @@ export default function DashboardView({
               <Linkedin className="w-5 h-5 text-blue-400" />
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-neutral-500 uppercase block">LinkedIn Profile</span>
+                  <span className="text-xs text-neutral-400 uppercase block">LinkedIn Profile</span>
                   <span className="font-bold text-white text-xs block mt-0.5">kota-sandeep-kumar</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
@@ -870,7 +894,7 @@ export default function DashboardView({
               <Github className="w-5 h-5 text-purple-400" />
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-neutral-500 uppercase block">GitHub Repository</span>
+                  <span className="text-xs text-neutral-400 uppercase block">GitHub Repository</span>
                   <span className="font-bold text-white text-xs block mt-0.5">sandeep2421-hub</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-neutral-500" />
@@ -889,7 +913,7 @@ export default function DashboardView({
               </div>
               <div className="flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] text-emerald-400 font-bold uppercase block">Official Curriculum Vitae</span>
+                  <span className="text-xs text-emerald-400 font-bold uppercase block">Official Curriculum Vitae</span>
                   <span className="font-bold text-white text-sm block mt-0.5">Download Kota Sandeep Kumar Resume (PDF)</span>
                 </div>
                 <ArrowUpRight className="w-4 h-4 text-emerald-400" />

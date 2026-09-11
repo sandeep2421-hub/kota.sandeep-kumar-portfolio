@@ -1,6 +1,5 @@
 {
-  "name": "Kota.Sandeep kumar Portfolio",
-  "description": "Personal developer portfolio designed with futuristic technical specs, dark mode showcase, and responsive features.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "Kota Sandeep Kumar Portfolio",
+  "description": "Portfolio of Kota Sandeep Kumar - Full-Stack & AI Software Engineer, B.Tech CSE at VIT Vellore ('27). Co-author of research submitted to IEEE INDICON 2026.",
+  "requestFramePermissions": []
 }

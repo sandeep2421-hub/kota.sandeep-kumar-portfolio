@@ -216,17 +216,17 @@ export const EDUCATION_DATA: EducationItem[] = [
   },
   {
     institution: "Sri Chaitanya Junior College",
-    degree: "Intermediate (CBSE)",
-    timeline: "2021 – 2023",
+    degree: "Intermediate (CBSE) — MPC (Mathematics, Physics, Chemistry)",
+    timeline: "2021 – 2023 (May 2023)",
     score: "Percentage: 70.4%",
-    highlights: ["Mathematics, Physics, Chemistry focus"],
+    highlights: ["Mathematics, Physics, Chemistry academic focus"],
   },
   {
     institution: "Sri Chaitanya Techno School",
-    degree: "10th (SSC)",
-    timeline: "2020 – 2021",
-    score: "GPA: 10 / 10",
-    highlights: ["Perfect Academic Score (GPA 10.0)"],
+    degree: "10th Standard (SSC — Board of Secondary Education Andhra Pradesh)",
+    timeline: "2020 – 2021 (June 2021)",
+    score: "GPA: 10.0 / 10 (100%)",
+    highlights: ["Perfect Academic Score (GPA 10.0 / 100%)"],
   },
 ];
 
@@ -284,8 +284,8 @@ export const TECHNICAL_SKILLS: SkillCategory[] = [
 export const RESEARCH_PUBLICATIONS: Publication[] = [
   {
     title: "Real-Time Data Fusion for Urban Traffic Prediction",
-    authorship: "Co-Author | Submitted to IEEE INDICON 2026",
-    venue: "IEEE INDICON 2026 (India Council International Conference)",
+    authorship: "Research Co-Author | Submitted to IEEE INDICON 2026",
+    venue: "IEEE INDICON 2026 (India Council International Conference) — Paper Submitted",
     paperId: "Paper ID: 2468",
     date: "August 2026",
     institution: "Vellore Institute of Technology, Vellore",
