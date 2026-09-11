@@ -85,55 +85,31 @@ export default function DashboardView({
       {/* STICKY DASHBOARD HEADER NAV */}
       <header
         id="dashboard-sticky-nav"
-        className="sticky top-0 z-30 w-full bg-black/90 backdrop-blur-xl border-b border-neutral-900 py-3.5 px-4 sm:px-8 flex flex-wrap items-center justify-between gap-4 -mx-6 md:-mx-12 xl:-mx-16"
+        className="sticky top-0 z-30 w-full bg-black/90 backdrop-blur-xl border-b border-neutral-900 py-3 px-4 sm:px-8 flex items-center justify-between gap-3 -mx-6 md:-mx-12 xl:-mx-16"
       >
-        {/* Candidate Status Indicator */}
-        <div className="flex items-center gap-3">
-          <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="font-mono text-xs text-neutral-200 uppercase font-bold tracking-wider">
-            KOTA SANDEEP KUMAR <span className="text-neutral-500 hidden sm:inline">| VIT CSE '27 (DELOITTE CANDIDATE)</span>
+        {/* Candidate Brand */}
+        <div className="flex items-center gap-2.5 flex-shrink-0">
+          <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
+          <span className="font-mono text-xs text-neutral-200 uppercase font-bold tracking-wider leading-none">
+            Kota Sandeep Kumar
+            <span className="text-neutral-500 hidden md:inline"> | VIT CSE '27</span>
           </span>
         </div>
 
-        {/* Navigation Anchors */}
-        <nav className="flex flex-wrap items-center gap-3 sm:gap-6 font-mono text-xs">
-          <button
-            onClick={() => scrollToSection("hero")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            Overview
+        {/* Desktop nav links — hidden on mobile */}
+        <nav className="hidden sm:flex items-center gap-4 lg:gap-6 font-mono text-xs flex-1 justify-center">
+          <button onClick={() => scrollToSection("hero")} className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase">Overview</button>
+          <button onClick={() => scrollToSection("research")} className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer font-medium uppercase flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5" /><span>Research</span>
           </button>
-          <button
-            onClick={() => scrollToSection("research")}
-            className="text-emerald-400 hover:text-emerald-300 transition-colors cursor-pointer font-medium uppercase flex items-center gap-1.5"
-          >
-            <BookOpen className="w-3.5 h-3.5" />
-            <span>IEEE Research</span>
-          </button>
-          <button
-            onClick={() => scrollToSection("projects")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            Projects
-          </button>
-          <button
-            onClick={() => scrollToSection("skills")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            Skills
-          </button>
-          <button
-            onClick={() => scrollToSection("education")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            Education
-          </button>
-          <button
-            onClick={() => scrollToSection("certifications")}
-            className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase"
-          >
-            Certs
-          </button>
+          <button onClick={() => scrollToSection("projects")} className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase">Projects</button>
+          <button onClick={() => scrollToSection("skills")} className="text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase">Skills</button>
+          <button onClick={() => scrollToSection("education")} className="hidden lg:block text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase">Education</button>
+          <button onClick={() => scrollToSection("certifications")} className="hidden lg:block text-neutral-400 hover:text-white transition-colors cursor-pointer font-medium uppercase">Certs</button>
+        </nav>
+
+        {/* Always-visible CTA buttons */}
+        <div className="flex items-center gap-2 flex-shrink-0 font-mono text-xs">
           <a
             href="resume.pdf"
             target="_blank"
@@ -141,7 +117,7 @@ export default function DashboardView({
             className="px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
           >
             <FileText className="w-3.5 h-3.5 fill-black" />
-            <span>Resume PDF</span>
+            <span className="hidden xs:inline sm:inline">Resume</span>
           </a>
           <button
             onClick={() => scrollToSection("contact")}
@@ -149,7 +125,7 @@ export default function DashboardView({
           >
             Contact
           </button>
-      </nav>
+        </div>
       </header>
 
       {/* SECTION: HERO / 5-SECOND DELOITTE RECRUITER SPOTLIGHT */}
@@ -165,16 +141,16 @@ export default function DashboardView({
               <h1 className="text-4xl sm:text-6xl xl:text-7xl font-black uppercase text-white font-display tracking-tight leading-[1.05]">
                 Kota Sandeep Kumar
               </h1>
-              <p className="text-neutral-300 font-mono text-xs sm:text-sm flex flex-wrap items-center gap-2">
+              <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-1 sm:gap-2 text-neutral-300 font-mono text-xs sm:text-sm">
                 <span className="flex items-center gap-1.5 text-cyan-400 font-semibold">
                   <GraduationCap className="w-4 h-4" />
                   <span>B.Tech in Computer Science and Engineering</span>
                 </span>
-                <span className="text-neutral-600">•</span>
+                <span className="text-neutral-600 hidden sm:inline">•</span>
                 <span>Vellore Institute of Technology (VIT Vellore)</span>
-                <span className="text-neutral-600">•</span>
+                <span className="text-neutral-600 hidden sm:inline">•</span>
                 <span className="text-emerald-400 font-semibold">Class of 2027</span>
-              </p>
+              </div>
             </div>
 
             {/* Executive Statement with Specializations and Proof */}
@@ -182,13 +158,14 @@ export default function DashboardView({
               Computer Science undergraduate specializing in <strong>AI/ML prediction systems</strong>, <strong>FastAPI / Node.js backend architectures</strong>, and <strong>scalable cloud deployments</strong>. Co-authored urban traffic data fusion research submitted to <strong>IEEE INDICON 2026</strong> (Paper ID: 2468) achieving 10–20% empirical accuracy gains.
             </p>
 
-            {/* Primary Action Buttons (Instant recruiter CTAs - 5-Second Test Passed) */}
-            <div className="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs">
+            {/* Primary Action Buttons */}
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-3 pt-2 font-mono text-xs">
+              {/* Primary CTAs — full width on mobile */}
               <a
                 href="resume.pdf"
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/20"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-bold uppercase transition-all cursor-pointer shadow-lg hover:shadow-emerald-500/20 w-full sm:w-auto"
               >
                 <FileText className="w-4 h-4 fill-black" />
                 <span>Download Resume (PDF)</span>
@@ -197,50 +174,53 @@ export default function DashboardView({
 
               <button
                 onClick={() => scrollToSection("projects")}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md"
+                className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md w-full sm:w-auto"
               >
                 <Code2 className="w-4 h-4" />
                 <span>Explore Projects</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
 
-              <button
-                onClick={() => scrollToSection("research")}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-emerald-500/40 text-emerald-400 hover:text-white hover:border-emerald-400 transition-all cursor-pointer"
-              >
-                <BookOpen className="w-4 h-4" />
-                <span>IEEE Research</span>
-              </button>
+              {/* Secondary CTAs — 2-col grid on mobile */}
+              <div className="grid grid-cols-2 gap-2 sm:contents">
+                <button
+                  onClick={() => scrollToSection("research")}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-emerald-500/40 text-emerald-400 hover:text-white hover:border-emerald-400 transition-all cursor-pointer"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  <span>Research</span>
+                </button>
 
-              <a
-                href={PERSONAL_INFO.github}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
-              >
-                <Github className="w-4 h-4" />
-                <span>GitHub</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
+                <a
+                  href={PERSONAL_INFO.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
+                >
+                  <Github className="w-4 h-4" />
+                  <span>GitHub</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 hidden sm:block" />
+                </a>
 
-              <a
-                href={PERSONAL_INFO.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
-              >
-                <Linkedin className="w-4 h-4 text-blue-400" />
-                <span>LinkedIn</span>
-                <ArrowUpRight className="w-3.5 h-3.5" />
-              </a>
+                <a
+                  href={PERSONAL_INFO.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-neutral-900 border border-neutral-800 text-neutral-200 hover:text-white hover:border-neutral-600 transition-all cursor-pointer shadow-sm"
+                >
+                  <Linkedin className="w-4 h-4 text-blue-400" />
+                  <span>LinkedIn</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 hidden sm:block" />
+                </a>
 
-              <a
-                href={`mailto:${PERSONAL_INFO.email}`}
-                className="flex items-center gap-2 px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white hover:border-cyan-500/40 transition-all cursor-pointer"
-              >
-                <Mail className="w-4 h-4 text-cyan-400" />
-                <span>Email</span>
-              </a>
+                <a
+                  href={`mailto:${PERSONAL_INFO.email}`}
+                  className="flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-neutral-950 border border-neutral-800 text-neutral-300 hover:text-white hover:border-cyan-500/40 transition-all cursor-pointer"
+                >
+                  <Mail className="w-4 h-4 text-cyan-400" />
+                  <span>Email</span>
+                </a>
+              </div>
             </div>
           </div>
 
@@ -308,8 +288,8 @@ export default function DashboardView({
             key={idx}
             className="p-6 sm:p-8 rounded-2xl border border-emerald-500/30 bg-emerald-950/10 space-y-6 backdrop-blur-md relative"
           >
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-emerald-900/40 pb-4">
-              <div className="flex items-center gap-3">
+            <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-2 border-b border-emerald-900/40 pb-4">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <span className="px-3 py-1 rounded text-xs font-mono font-bold uppercase tracking-widest bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
                   {pub.paperId}
                 </span>
@@ -320,7 +300,7 @@ export default function DashboardView({
                   Submitted Paper
                 </span>
               </div>
-              <span className="font-mono text-xs text-neutral-400">
+              <span className="hidden sm:block font-mono text-xs text-neutral-400">
                 Conference Venue: <strong className="text-white">{pub.venue}</strong>
               </span>
             </div>
@@ -474,14 +454,14 @@ export default function DashboardView({
               )}
             </div>
 
-            {/* Project Action Links (Clean, Trustworthy, No 404s) */}
-            <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+            {/* Project Action Links */}
+            <div className="flex flex-col gap-2 font-mono text-xs sm:flex-row sm:flex-wrap sm:items-center sm:gap-3">
               {currentProject.githubUrl && (
                 <a
                   href={currentProject.githubUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md"
+                  className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-white text-black font-bold uppercase hover:bg-neutral-200 transition-all cursor-pointer shadow-md w-full sm:w-auto"
                 >
                   <Github className="w-4 h-4" />
                   <span>View Verified Code</span>
@@ -494,7 +474,7 @@ export default function DashboardView({
                   href={currentProject.liveUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-cyan-500 hover:bg-cyan-400 text-black font-bold uppercase transition-all cursor-pointer shadow-md"
                 >
                   <Globe className="w-4 h-4" />
                   <span>Live Health Endpoint</span>
@@ -502,21 +482,23 @@ export default function DashboardView({
                 </a>
               )}
 
-              <button
-                onClick={() => onOpenSimulator(currentProject)}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-cyan-500/50 bg-neutral-900 text-neutral-200 hover:text-white transition-all cursor-pointer"
-              >
-                <Zap className="w-4 h-4 text-cyan-400" />
-                <span>Interactive Demo</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => onOpenSimulator(currentProject)}
+                  className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-cyan-500/50 bg-neutral-900 text-neutral-200 hover:text-white transition-all cursor-pointer"
+                >
+                  <Zap className="w-4 h-4 text-cyan-400" />
+                  <span>Interactive Demo</span>
+                </button>
 
-              <button
-                onClick={onOpenDetail}
-                className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-neutral-600 bg-neutral-950 text-neutral-400 hover:text-white transition-all cursor-pointer"
-              >
-                <span>Technical Details</span>
-                <ChevronRight className="w-4 h-4" />
-              </button>
+                <button
+                  onClick={onOpenDetail}
+                  className="flex flex-1 sm:flex-none items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-neutral-800 hover:border-neutral-600 bg-neutral-950 text-neutral-400 hover:text-white transition-all cursor-pointer"
+                >
+                  <span>Details</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
           </div>
 
